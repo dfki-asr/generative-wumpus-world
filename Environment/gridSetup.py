@@ -1,18 +1,16 @@
 from random import randrange
-import numpy as np
 from GridObject import Grid
 
 class gridSetup():
     def __init__(self, dimension, n_pits=3, n_golds=1, n_wumpus=1):
         self.grid = Grid(dimension)
-        self.percGrid = np.empty((dimension, dimension), str)
         self.pitCoordinates = []
         self.wumpusCoordinates = []
         self.stenchCoord = []
         self.breezeCoord = []
         self.glitterCoord = []
-        self.goldCoordinate = [0,0]
-        self.goldCoordinate = self.getRandomCoordinates(dimension, 1)
+        self.goldCoordinate = []
+        self.goldCoordinate = self.getRandomCoordinates(dimension, n_golds)
         self.pitCoordinates = self.getRandomCoordinates(dimension, n_pits)
         self.wumpusCoordinates = self.getRandomCoordinates(dimension, n_wumpus)
         self.grid.set_coord(self.wumpusCoordinates, 'W')
@@ -31,7 +29,7 @@ class gridSetup():
         temp_list = []
         while i<num :
             temp = randrange(dimension), randrange(dimension)
-            if (temp in self.pitCoordinates  or temp in self.wumpusCoordinates or temp in self.goldCoordinate) and temp != (0,0):
+            if (temp in self.pitCoordinates  or temp in self.wumpusCoordinates or temp in self.goldCoordinate) and temp == (0,0):
                 continue
             else:
                 temp_list.append(temp)

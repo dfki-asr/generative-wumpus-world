@@ -5,9 +5,24 @@ class Grid:
         self.grid = [[""] * dimensions for _ in range(dimensions)]
 
     def __str__(self):
-        gridstr = ""
-        for el in self.grid:
-            gridstr += str(el) + "\n"
+        gridstr = "-" * 60 + "\n|"
+        for i,row in enumerate(self.grid):
+            for el in row:
+                l = len(el)
+                if l == 0:
+                    gridstr += " "*5
+                elif l == 1:
+                    gridstr += "  " + el + "  "
+                elif l == 3:
+                    gridstr += " " + el + " "
+                else:
+                    gridstr += el
+                gridstr += "|"
+            if(i<self.dimensions-1):
+                gridstr += "\n" + "-" * 60 + "\n|"
+            else:
+                gridstr += "\n" + "-" * 60
+
         return gridstr
 
     def set_coord(self, coord, value):
