@@ -5,23 +5,25 @@ class Grid:
         self.grid = [[""] * dimensions for _ in range(dimensions)]
 
     def __str__(self):
-        gridstr = "-" * 60 + "\n|"
+        gridstr = "-" * 80 + "\n|"
         for i,row in enumerate(self.grid):
             for el in row:
                 l = len(el)
                 if l == 0:
-                    gridstr += " "*5
+                    gridstr += " "*7
                 elif l == 1:
-                    gridstr += "  " + el + "  "
+                    gridstr += "   " + el + "   "
                 elif l == 3:
+                    gridstr += "  " + el + "  "
+                elif l == 5:
                     gridstr += " " + el + " "
                 else:
                     gridstr += el
                 gridstr += "|"
             if(i<self.dimensions-1):
-                gridstr += "\n" + "-" * 60 + "\n|"
+                gridstr += "\n" + "-" * 80 + "\n|"
             else:
-                gridstr += "\n" + "-" * 60
+                gridstr += "\n" + "-" * 80
 
         return gridstr
 
