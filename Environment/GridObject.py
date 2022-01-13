@@ -31,7 +31,7 @@ class Grid:
         for coord_i in coord:
             x, y = coord_i
             if self.grid[x][y] == "":
-                self.grid[x][y] +=  value
+                self.grid[x][y] += value
             else:
                 self.grid[x][y] += ("+" + value)
 

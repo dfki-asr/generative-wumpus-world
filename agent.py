@@ -14,12 +14,12 @@ class Agent :
     flippedRules : 1
 
     def __init__(self):
-        self.locatedAt : (0,0)
-        self.fatigue : 0
-        self.generation : 0
-        self.rules: []
-        self.knownPhenomena: []
-        self.currentObservations: []
+        self.locatedAt =(0,0)
+        self.fatigue = 0
+        self.generation = 0
+        self.rules = []
+        self.knownPhenomena = []
+        self.currentObservations = []
         
 
     def createInitialAgent(self, ) :

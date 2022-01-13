@@ -1,8 +1,7 @@
 from random import randrange
 from GridObject import Grid
-
 class gridSetup():
-    def __init__(self, dimension, n_pits=3, n_golds=1, n_wumpus=1):
+    def __init__(self, dimension, n_pits: int, n_golds: int, n_wumpus:int):
         self.grid = Grid(dimension)
         self.pitCoordinates = []
         self.wumpusCoordinates = []
@@ -22,7 +21,7 @@ class gridSetup():
         self.grid.set_coord(self.breezeCoord, 'b')
         self.grid.set_coord(self.stenchCoord, 's')
         self.grid.set_coord(self.glitterCoord, 'g')
-        print(self.grid)
+
 
     def getRandomCoordinates(self, dimension, num):
         i=0
@@ -37,3 +36,6 @@ class gridSetup():
         # print(temp_list)
         return temp_list
 
+    def updateAgentCoordinates(self, agents:list):
+        for agent in agents:
+            self.grid.set_coord(agent.locatedAt, 'A')

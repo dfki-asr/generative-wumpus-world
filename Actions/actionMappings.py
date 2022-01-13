@@ -19,6 +19,6 @@ def move(agent, direction = None) :
 def setToBounds(agent) :
     agent.locatedAt = agent.locatedAt ## later set Agent to grid borders
 
-mappingTable : {
-    "move" : move 
-    }
+mappingTable = {
+
+}
