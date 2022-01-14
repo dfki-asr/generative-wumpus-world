@@ -5,6 +5,11 @@ from Environment.gridSetup import gridSetup
 class agentobject:
 
     def __init__(self, n_initChrom:int, grid:gridSetup, dimension:int):
+        self.fatigue = 0
+        self.generation = 0
+        self.rules = []
+        self.knownPhenomena = []
+        self.currentObservations = []
         self.chromList = []
         self.tab_of_act = {
             'MN': ('move', 'N'),
@@ -38,7 +43,7 @@ class agentobject:
         temp_list = []
         while i<num :
             temp = randrange(dimension), randrange(dimension)
-            if (temp in grid.pitCoordinates  or temp in grid.wumpusCoordinates or temp in grid.goldCoordinate) and temp == (0,0):
+            if temp in grid.pitCoordinates  or temp in grid.wumpusCoordinates or temp in grid.goldCoordinate or temp == (0,0):
                 continue
             else:
                 temp_list.append(temp)
