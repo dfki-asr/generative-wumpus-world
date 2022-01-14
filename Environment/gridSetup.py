@@ -28,7 +28,7 @@ class gridSetup():
         temp_list = []
         while i<num :
             temp = randrange(dimension), randrange(dimension)
-            if (temp in self.pitCoordinates  or temp in self.wumpusCoordinates or temp in self.goldCoordinate) and temp == (0,0):
+            if temp in self.pitCoordinates  or temp in self.wumpusCoordinates or temp in self.goldCoordinate or temp == (0,0):
                 continue
             else:
                 temp_list.append(temp)
