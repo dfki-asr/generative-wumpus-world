@@ -35,6 +35,25 @@ class Grid:
             else:
                 self.grid[x][y] += ("+" + value)
 
+    def get_coord(self, grid, value):
+        ret_vals = []
+        for i, e in enumerate(grid):
+            for j, e_2 in enumerate(e):
+                f = e_2.find(value)
+                l = e_2.rfind(value)
+                if f == -1 or l == -1:
+                    continue
+                elif f == l:
+                    ret_vals.append((i,j))
+                else:
+                    num = ((l - f)/2)+1
+                    for _ in range(int(num)):
+                        ret_vals.append((i, j))
+        return ret_vals
+
+        # raise ValueError("{!r} is not in list".format(value))
+
+
     def neighboursOf(self, coord):
         temp_list = []
         for coordinate in coord:
