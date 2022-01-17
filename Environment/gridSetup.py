@@ -18,9 +18,9 @@ class gridSetup():
         self.breezeCoord = self.grid.neighboursOf(self.pitCoordinates)
         self.stenchCoord = self.grid.neighboursOf(self.wumpusCoordinates)
         self.glitterCoord = self.grid.neighboursOf(self.goldCoordinate)
-        self.grid.set_coord(self.breezeCoord, 'b')
-        self.grid.set_coord(self.stenchCoord, 's')
-        self.grid.set_coord(self.glitterCoord, 'g')
+        self.grid.set_perc(self.breezeCoord, 'b')
+        self.grid.set_perc(self.stenchCoord, 's')
+        self.grid.set_perc(self.glitterCoord, 'g')
 
 
     def getRandomCoordinates(self, dimension, num):
@@ -40,9 +40,8 @@ class gridSetup():
         return temp_list
 
     def updateAgentCoordinates(self, grid, agents:list):
-        old = []
         old = self.grid.get_coord(grid, 'A')
-        print(f'temp is {old}')
+        print(f'previous coordinates are {old}')
         if len(old)==0:                     # if there no agents are in the grid, i.e at the beginning of the run
             for agent in agents:
                 self.grid.set_coord(agent.locatedAt, 'A')       # put agents on the grid
@@ -57,4 +56,5 @@ class gridSetup():
                         val = val.replace('A', '')
                 self.grid.grid[old[i][0]][old[i][1]] = val  # previous contents of grid, after removing agents
             for agent in agents:
-                self.grid.set_coord(agent.locatedAt, 'A')  # populate new agent locations on grid
+                 if agent.alive:
+                    self.grid.set_coord(agent.locatedAt, 'A')  # populate new agent locations on grid
