@@ -3,7 +3,6 @@ from random import choice, randrange
 from Environment.gridSetup import gridSetup
 from Actions.directionMappings import directions
 class agentobject:
-
     def __init__(self, n_initChrom:int, grid:gridSetup, dimension:int):
         self.fatigue = 0
         self.generation = 0
@@ -11,6 +10,7 @@ class agentobject:
         self.knownPhenomena = []
         self.currentObservations = []
         self.chromList = []
+        self.alive = True
         self.tab_of_act = {
             'MN': ('move', 'N'),
             'MS': ('move', 'S'),
@@ -23,9 +23,7 @@ class agentobject:
             'SW': ('shoot', 'W')
         }
         self.initChromosome(n_initChrom)
-        self.locatedAt = self.getRandomCoordinates(dimension, 1, grid)
-
-
+        self.locatedAt = self.getRandomCoordinates(1, grid)
 
     def initChromosome(self, n_initChrom:int):
         i=0
@@ -38,11 +36,11 @@ class agentobject:
                 i += 1
         return self.chromList
 
-    def getRandomCoordinates(self, dimension, num, grid):
+    def getRandomCoordinates(self, num, grid):
         i=0
         temp_list = []
         while i<num :
-            temp = randrange(dimension), randrange(dimension)
+            temp = randrange(grid.grid.dimensions), randrange(grid.grid.dimensions)
             if temp in grid.pitCoordinates  or temp in grid.wumpusCoordinates or temp in grid.goldCoordinate or temp == (0,0):
                 continue
             else:
@@ -53,18 +51,16 @@ class agentobject:
 
     def move(self, grid):
         valid = False
-        fromPos = self.locatedAt
         while not valid:
             dir = choice(list(directions))
             toPos = self.locatedAt[0][0]+directions[dir][0], self.locatedAt[0][1]+directions[dir][1]
-            if toPos[0] >9 or toPos[1] > 9 or toPos[0]<0 or toPos[1]<0:
+            if toPos[0] >grid.grid.dimensions-1 or toPos[1] > grid.grid.dimensions-1 or toPos[0]<0 or toPos[1]<0:
                 # print(f'continuing because toPos = {toPos}')
                 continue
             else:
                 valid = True
         self.locatedAt.pop(0)
         self.locatedAt.append(toPos)
-
 
 
 
