@@ -3,6 +3,42 @@ from time import sleep
 from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
 
+
+def perceive(agent, grid, agent_id):
+    loc = agent.locatedAt
+    perc = grid.grid.get_perc(loc)
+    if len(perc) > 0:
+        if perc not in agent.knownPhenomena:
+            agent.knownPhenomena.append(perc)
+            # print(f'At {loc}, there is a {perc} perception for agent {agent_id}')
+
+
+def updateStatus(agent, grid, agent_id):
+    loc = agent.locatedAt
+    # print(f'location {loc} p {grid.pitCoordinates} s {grid.stenchCoord}')
+    if loc[0] in grid.goldCoordinate:
+        print(f'agent {agent_id} found gold')
+        return 0
+    elif loc[0] in grid.wumpusCoordinates or loc[0] in grid.pitCoordinates:
+        print(f'agent {agent_id} died')
+        agent.alive = False
+        print("------------------")
+        print(agent.locatedAt, agent.alive)
+
+
+def removeDeadAgents(agents):
+    dead_agents = []
+    for i in range(len(agents)):
+        if not agents[i].alive:
+            dead_agents.append(agents[i])
+        else:
+            continue
+    print(dead_agents)
+    for i in range(len(dead_agents)):
+        agents.remove(dead_agents[i])
+        print(f'whatever the hell {len(agents)}')
+
+
 class game():
     def __init__(self, n_wumpus, n_golds, n_pits, n_agents, n_initChrom, dimension):
         agents = []
@@ -11,14 +47,20 @@ class game():
             temp = agentobject(n_initChrom, grid, dimension)
             agents.append(temp)
         grid.updateAgentCoordinates(grid.grid.grid, agents)
-
+        for i in range(n_agents):
+            loc = agents[i].locatedAt
+            print(f'agent {i} located at {loc}')
         print(grid.grid)
         for a in range(10):
-            for i in range(n_agents):
+            for i in range(len(agents)):
                 # print(f'agent {i} located at {agents[i].locatedAt}')
                 agents[i].move(grid)
+                perceive(agents[i], grid, i)
+                updateStatus(agents[i], grid, i)
                 # print(f'After move, agent {i} located at {agents[i].locatedAt}')
             print("\n\n\n")
+            print(f'agent length after removing dead guys {len(agents)}')
             grid.updateAgentCoordinates(grid.grid.grid, agents)
+            removeDeadAgents(agents)
             print(grid.grid)
 
