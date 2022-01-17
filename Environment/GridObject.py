@@ -3,6 +3,7 @@ class Grid:
     def __init__(self, dimensions):
         self.dimensions = dimensions
         self.grid = [[""] * dimensions for _ in range(dimensions)]
+        self.perceptions = [[""] * dimensions for _ in range(dimensions)]
 
     def __str__(self):
         gridstr = "-" * 80 + "\n|"
@@ -34,6 +35,19 @@ class Grid:
                 self.grid[x][y] += value
             else:
                 self.grid[x][y] += ("+" + value)
+
+    def set_perc(self, coord, value):
+        for coord_i in coord:
+            x, y = coord_i
+            if self.perceptions[x][y] == "":
+                self.perceptions[x][y] += value
+            else:
+                self.perceptions[x][y] += ("+" + value)
+
+    def get_perc(self, coord):
+        for coord_i in coord:
+            x, y = coord_i
+            return self.perceptions[x][y]
 
     def get_coord(self, grid, value):
         ret_vals = []
