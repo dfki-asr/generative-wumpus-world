@@ -1,5 +1,5 @@
 from random import randrange
-from GridObject import Grid
+from .GridObject import Grid
 class gridSetup():
     def __init__(self, dimension, n_pits: int, n_golds: int, n_wumpus:int):
         self.grid = Grid(dimension)

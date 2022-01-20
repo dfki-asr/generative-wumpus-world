@@ -1,5 +1,5 @@
 from Game.Game import game
-from gridSetup import gridSetup
+from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
 
 
