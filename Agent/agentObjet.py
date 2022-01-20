@@ -1,9 +1,11 @@
 from random import choice, randrange
-
+from Actions import actionMappings
+from Actions.actionMappings import tab_of_act
 from Environment.gridSetup import gridSetup
 from Actions.directionMappings import directions
 class agentobject:
     def __init__(self, n_initChrom:int, grid:gridSetup, dimension:int):
+        # self.action_generator = (act for act in self.chromosome)
         self.fatigue = 0
         self.generation = 0
         self.rules = []
@@ -11,26 +13,18 @@ class agentobject:
         self.currentObservations = []
         self.chromList = []
         self.alive = True
-        self.tab_of_act = {
-            'MN': ('move', 'N'),
-            'MS': ('move', 'S'),
-            'ME': ('move', 'E'),
-            'MW': ('move', 'W'),
-            'P': ('pickup'),
-            'SN': ('shoot', 'N'),
-            'SS': ('shoot', 'S'),
-            'SE': ('shoot', 'E'),
-            'SW': ('shoot', 'W')
-        }
+        self.arrow = True
+        self.gotGold = False
+        self.killedWumpus = False
         self.initChromosome(n_initChrom)
         self.locatedAt = self.getRandomCoordinates(1, grid)
 
     def initChromosome(self, n_initChrom:int):
         i=0
         while i<n_initChrom:
-            if n_initChrom > len(self.tab_of_act):
-                raise Exception(f'Initial number of chromosomes cannot be greater than total actions possible ({len(self.tab_of_act)+1})')
-            item = choice(list(self.tab_of_act))
+            if n_initChrom > len(tab_of_act):
+                raise Exception(f'Initial number of chromosomes cannot be greater than total actions possible ({len(tab_of_act)+1})')
+            item = choice(list(tab_of_act.keys()))
             if not ('always', item) in self.chromList:
                 self.chromList.append(("always", item))
                 i += 1
@@ -49,6 +43,13 @@ class agentobject:
         # print(temp_list)
         return temp_list
 
+    def act(self, ) :
+        try:
+            act = next(self.action_generator)
+            return tab_of_act[act]
+        except StopIteration:
+            return None
+
     def move(self, grid):
         valid = False
         while not valid:
@@ -61,6 +62,8 @@ class agentobject:
                 valid = True
         self.locatedAt.pop(0)
         self.locatedAt.append(toPos)
+
+
 
 
 
