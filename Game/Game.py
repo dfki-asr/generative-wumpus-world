@@ -20,10 +20,9 @@ def updateStatus(agent, grid, agent_id):
         print(f'agent {agent_id} found gold')
         return 0
     elif loc[0] in grid.wumpusCoordinates or loc[0] in grid.pitCoordinates:
-        print(f'agent {agent_id} died')
+        print(f'agent {agent_id} located at {agent.locatedAt} has died')
         agent.alive = False
         print("------------------")
-        print(agent.locatedAt, agent.alive)
 
 
 def removeDeadAgents(agents):
@@ -33,10 +32,9 @@ def removeDeadAgents(agents):
             dead_agents.append(agents[i])
         else:
             continue
-    print(dead_agents)
+    # print(dead_agents)
     for i in range(len(dead_agents)):
         agents.remove(dead_agents[i])
-        print(f'whatever the hell {len(agents)}')
 
 
 class game():
@@ -50,17 +48,22 @@ class game():
         for i in range(n_agents):
             loc = agents[i].locatedAt
             print(f'agent {i} located at {loc}')
+            print(f'agent has chromosome {agents[i].chromList}')
         print(grid.grid)
         for a in range(10):
             for i in range(len(agents)):
                 # print(f'agent {i} located at {agents[i].locatedAt}')
-                agents[i].move(grid)
                 perceive(agents[i], grid, i)
+                #########  here we need to put in the "PERFORM ACTION" routine which chooses move/pickup/shoot
+                agents[i].move(grid)
+                #####################################
                 updateStatus(agents[i], grid, i)
                 # print(f'After move, agent {i} located at {agents[i].locatedAt}')
             print("\n\n\n")
-            print(f'agent length after removing dead guys {len(agents)}')
+            # print(f'agent length after removing dead guys {len(agents)}')
             grid.updateAgentCoordinates(grid.grid.grid, agents)
             removeDeadAgents(agents)
             print(grid.grid)
+        for i,agent in enumerate(agents):
+            print(f'agent {i} has known phenomena: {agent.knownPhenomena}')
 
