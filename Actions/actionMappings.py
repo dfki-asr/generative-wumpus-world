@@ -1,11 +1,11 @@
 tab_of_act = {
-            'W': ('move', 'N'),
+            'N': ('move', 'N'),
             'S': ('move', 'S'),
-            'A': ('move', 'E'),
-            'D': ('move', 'W'),
-            'P': ('pickup'),
-            'w': ('shoot', 'N'),
+            'E': ('move', 'E'),
+            'W': ('move', 'W'),
+            'P': ('pickup', ''),
+            'n': ('shoot', 'N'),
             's': ('shoot', 'S'),
-            'a': ('shoot', 'E'),
-            'd': ('shoot', 'W')
+            'e': ('shoot', 'E'),
+            'w': ('shoot', 'W')
         }
