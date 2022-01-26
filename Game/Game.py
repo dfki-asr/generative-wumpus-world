@@ -1,5 +1,6 @@
 from time import sleep
 
+from Actions.actionMappings import tab_of_act
 from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
 
@@ -37,6 +38,10 @@ def removeDeadAgents(agents):
         agents.remove(dead_agents[i])
 
 
+def getTarget(locatedAt, direction):
+    pass
+
+
 class game():
     def __init__(self, n_wumpus, n_golds, n_pits, n_agents, n_initChrom, dimension):
         agents = []
@@ -48,15 +53,32 @@ class game():
         for i in range(n_agents):
             loc = agents[i].locatedAt
             print(f'agent {i} located at {loc}')
-            print(f'agent has chromosome {agents[i].chromList}')
+            # print(f'agent has chromosome {agents[i].chromList}')
         print(grid.grid)
-        for a in range(10):
+        for a in range(1):
             for i in range(len(agents)):
                 # print(f'agent {i} located at {agents[i].locatedAt}')
                 perceive(agents[i], grid, i)
-                #########  here we need to put in the "PERFORM ACTION" routine which chooses move/pickup/shoot
-                agents[i].move(grid)
-                #####################################
+                action, direction = agents[i].act()
+                print(f'agent {i}: {action} in direction {direction}')
+
+                if action == 'move':
+                    agents[i].move(direction, grid)
+                if action == 'shoot':
+                    if agents[i].arrow:
+                        agents[i].arrow = False
+                        targCoord = agents[i].shootTargetCoord(grid, direction)
+                        print(f'agent {i} shot from {agents[i].locatedAt} to {targCoord}')
+                        if targCoord in grid.wumpusCoordinates:
+                            agents[i].killedWumpus = True
+                            print(f'agent {i} killed wumpus at {targCoord}')
+                        else:
+                            print(f'Arrow missed')
+                if action == 'pickup':
+                    if agents[i].locatedAt in grid.goldCoordinate:
+                        agents[i].gotGold = True
+                        print(f'agent {i} found gold')
+
                 updateStatus(agents[i], grid, i)
                 # print(f'After move, agent {i} located at {agents[i].locatedAt}')
             print("\n\n\n")
@@ -64,6 +86,6 @@ class game():
             grid.updateAgentCoordinates(grid.grid.grid, agents)
             removeDeadAgents(agents)
             print(grid.grid)
-        for i,agent in enumerate(agents):
-            print(f'agent {i} has known phenomena: {agent.knownPhenomena}')
+        # for i,agent in enumerate(agents):
+        #     print(f'agent {i} has known phenomena: {agent.knownPhenomena}')
 
