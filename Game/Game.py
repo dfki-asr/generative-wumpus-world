@@ -42,7 +42,7 @@ def updateStatus(agent, grid, agent_id):
 
     if not agent.arrow:
         actions_left = [action[1] for action in agent.chromList]
-        valid_actions = ['E', 'W', 'N', 'S', 'P']
+        valid_actions = ['E', 'W', 'N', 'S']
         if not listIntersection(actions_left, valid_actions):
             agent.alive = False
             print(f'agent killed due to no move actions in chromList, but also out of arrows')
