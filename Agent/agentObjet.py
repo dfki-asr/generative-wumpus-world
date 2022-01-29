@@ -15,7 +15,7 @@ def isValidDirection(grid, position):
 
 
 class agentobject:
-    def __init__(self, n_initChrom: int, grid: gridSetup):
+    def __init__(self, grid: gridSetup, chromosome = None):
         self.size_limit = 10
         self.fatigue = 20
         self.generation = 0
@@ -23,31 +23,32 @@ class agentobject:
         self.rules = []
         self.knownPhenomena = []
         self.currentObservations = []
-        self.chromList = []
+        self.chromList = chromosome if chromosome else self.initChromosome()
         self.wonGame = False
         self.alive = True
         self.arrow = True
         self.gotGold = False
         self.killedWumpus = False
-        self.initChromosome(n_initChrom)
+        self.initChromosome()
         self.action_generator = (act for act in self.chromList)
         self.locatedAt = self.getRandomCoordinates(1, grid)
 
-    def initChromosome(self, n_initChrom: int):
+    def initChromosome(self):    # initialises the agent with random chromosomes of random length (between 3 and self.size_limit)
+        chrom_list = []
         rand_size = randrange(3, self.size_limit)
         i = 0
         while i < rand_size:
             item = choice(list(tab_of_act.keys()))
-            self.chromList.append(("always", item))
+            chrom_list.append(("always", item))
             i += 1
-        return self.chromList
+        return chrom_list
 
-    def addPhenomenaToChromosome(self, perception):
+    def addPhenomenaToChromosome(self, perception):     # adds newly discovered perception with a random action to chromList
         item = choice(list(tab_of_act.keys()))
         self.chromList.append((perception, item))
         print(f'new chromList {self.chromList}')
 
-    def getRandomCoordinates(self, num, grid):
+    def getRandomCoordinates(self, num, grid):   # get "num" number of random coordinates which are unique for pits/wumpus/start
         i = 0
         temp_list = []
         while i < num:
@@ -61,12 +62,12 @@ class agentobject:
         # print(temp_list)
         return temp_list
 
-    def act(self, ):
+    def act(self, ):        # choose a random action from chromosome list
         obs, act = choice(self.chromList)
         return tab_of_act[act]
 
 
-    def random_move(self, grid):
+    def random_move(self, grid):    # move randomly
         valid = False
         while not valid:
             dir = choice(list(directions))
@@ -80,7 +81,7 @@ class agentobject:
         self.locatedAt.pop(0)
         self.locatedAt.append(toPos)
 
-    def move(self, direction, grid):
+    def move(self, direction, grid):    # move in given "direction" on the "grid"
         x, y = self.locatedAt[0]
 
         if direction == 'N':
@@ -103,7 +104,7 @@ class agentobject:
             self.fitness += 1
 
 
-    def shootTargetCoord(self, grid, direction):
+    def shootTargetCoord(self, grid, direction):  #  get the target coordinate where arrow will be shot
         x, y = self.locatedAt[0]
 
         if direction == 'N':
