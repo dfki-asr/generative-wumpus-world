@@ -1,12 +1,11 @@
 from Game.Game import game
 from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
-
+from Game.ga_game import ga_game
 
 def main():
-    game1 = game(n_wumpus=1, n_golds=1, n_pits=9, n_agents=5, n_initChrom=4, dimension=10)
-    game1.run_game()
-
+    game1 = ga_game(50, 0.8, 0.3)
+    game1.run()
 
 if __name__ == '__main__':
     main()
