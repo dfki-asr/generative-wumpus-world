@@ -49,9 +49,9 @@ class Grid:
             x, y = coord_i
             return self.perceptions[x][y]
 
-    def get_coord(self, grid, value):
+    def get_coord(self, value):
         ret_vals = []
-        for i, e in enumerate(grid):
+        for i, e in enumerate(self.grid):
             for j, e_2 in enumerate(e):
                 f = e_2.find(value)
                 l = e_2.rfind(value)
