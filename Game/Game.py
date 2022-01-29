@@ -2,7 +2,7 @@ from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
 import numpy as np
 
-def perceive(agent, grid, agent_id):
+def perceive(agent, grid, agent_id):   # check for perceptions and add to knownPhenomena if not already there
     loc = agent.locatedAt
     perc = grid.grid.get_perc(loc)
     if len(perc) > 0:
@@ -12,7 +12,7 @@ def perceive(agent, grid, agent_id):
             print(f'At {loc}, there is a {perc} perception for agent {agent_id}')
 
 
-def updateStatus(agent, grid, agent_id):
+def updateStatus(agent, grid, agent_id):  # check if agent alive/dead and assign fitness scores
     loc = agent.locatedAt
     # print(f'location {loc} p {grid.pitCoordinates} s {grid.stenchCoord}')
     if loc[0] in grid.goldCoordinate:
@@ -59,10 +59,10 @@ class game():
         self.graveyard = []
         self.bestIndividual = None
 
-    def initialize_agents(self):
+    def initialize_agents(self):    # init agents and add them to grid
         agents = []
         for i in range(self.n_agents):
-            temp = agentobject(self.n_initChrom, self.cave)
+            temp = agentobject(self.cave)
             agents.append(temp)
         return agents
 
@@ -105,16 +105,16 @@ class game():
                 # print(f'After move, agent {i} located at {self.agents[i].locatedAt}')
             print("\n")
             # print(f'agent length after removing dead guys {len(self.agents)}')
-            self.cave.updateAgentCoordinates(self.agents)
             self.removeDeadAgents()
+            self.cave.updateAgentCoordinates(self.agents)
             # print(self.cave.grid)
         # for i,agent in enumerate(self.agents):
         #     print(f'agent {i} has known phenomena: {agent.knownPhenomena}')
         for indiv in self.graveyard:
             print(f' overall: {indiv.fitness}, {indiv.chromList}')
         fitness_list = [indiv.fitness for indiv in self.graveyard]
-        fittest_index = np.argmax(fitness_list)
-        self.bestIndividual = self.graveyard[fittest_index].chromList
+        self.graveyard.sort(key=lambda element: element.fitness, reverse=True) # graveyard sorted (desc) by fitness
+        self.bestIndividual = self.graveyard[0].chromList
         print(self.bestIndividual)
 
 
