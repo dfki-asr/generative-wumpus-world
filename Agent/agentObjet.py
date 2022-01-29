@@ -15,13 +15,16 @@ def isValidDirection(grid, position):
 
 
 class agentobject:
-    def __init__(self, n_initChrom: int, grid: gridSetup, dimension: int):
-        self.fatigue = 0
+    def __init__(self, n_initChrom: int, grid: gridSetup):
+        self.size_limit = 10
+        self.fatigue = 20
         self.generation = 0
+        self.fitness = 0
         self.rules = []
         self.knownPhenomena = []
         self.currentObservations = []
         self.chromList = []
+        self.wonGame = False
         self.alive = True
         self.arrow = True
         self.gotGold = False
@@ -31,16 +34,18 @@ class agentobject:
         self.locatedAt = self.getRandomCoordinates(1, grid)
 
     def initChromosome(self, n_initChrom: int):
+        rand_size = randrange(3, self.size_limit)
         i = 0
-        while i < n_initChrom:
-            if n_initChrom > len(tab_of_act):
-                raise Exception(
-                    f'Initial number of chromosomes cannot be greater than total actions possible ({len(tab_of_act) + 1})')
+        while i < rand_size:
             item = choice(list(tab_of_act.keys()))
-            if not ('always', item) in self.chromList:
-                self.chromList.append(("always", item))
-                i += 1
+            self.chromList.append(("always", item))
+            i += 1
         return self.chromList
+
+    def addPhenomenaToChromosome(self, perception):
+        item = choice(list(tab_of_act.keys()))
+        self.chromList.append((perception, item))
+        print(f'new chromList {self.chromList}')
 
     def getRandomCoordinates(self, num, grid):
         i = 0
@@ -57,12 +62,9 @@ class agentobject:
         return temp_list
 
     def act(self, ):
-        try:
-            obs, act = next(self.action_generator)
-            return tab_of_act[act]
-        except StopIteration:
-            print("Out of actions")
-            return None
+        obs, act = choice(self.chromList)
+        return tab_of_act[act]
+
 
     def random_move(self, grid):
         valid = False
@@ -93,9 +95,13 @@ class agentobject:
         elif direction == 'W':
             newPos = self.locatedAt[0][0], y - 1
 
+        self.fatigue -= 1
+
         if isValidDirection(grid, newPos):
             self.locatedAt.pop(0)
             self.locatedAt.append(newPos)
+            self.fitness += 1
+
 
     def shootTargetCoord(self, grid, direction):
         x, y = self.locatedAt[0]
