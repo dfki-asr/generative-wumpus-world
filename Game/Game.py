@@ -53,8 +53,9 @@ class game():
         self.n_agents = n_agents
         self.n_initChrom = n_initChrom
         self.cave = gridSetup(dimension, n_pits, n_golds, n_wumpus)
+        self.agents = []
         self.agents = self.initialize_agents()
-        self.cave.updateAgentCoordinates(self.agents)
+        self.cave.updateAgentCoordinates(self.agents, True)
         self.print_agent_init_chromList()
         self.graveyard = []
         self.bestIndividual = None
@@ -106,7 +107,7 @@ class game():
             print("\n")
             # print(f'agent length after removing dead guys {len(self.agents)}')
             self.removeDeadAgents()
-            self.cave.updateAgentCoordinates(self.agents)
+
             # print(self.cave.grid)
         # for i,agent in enumerate(self.agents):
         #     print(f'agent {i} has known phenomena: {agent.knownPhenomena}')
@@ -129,6 +130,7 @@ class game():
         for i in range(len(dead_agents)):
             self.graveyard.append(dead_agents[i])
             self.agents.remove(dead_agents[i])
+        self.cave.updateAgentCoordinates(self.agents, False)
 
 def listIntersection(lst1, lst2):
     lst3 = [value for value in lst1 if value in lst2]

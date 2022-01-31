@@ -39,10 +39,10 @@ class gridSetup():
         # print(temp_list)
         return temp_list
 
-    def updateAgentCoordinates(self, agents:list):
+    def updateAgentCoordinates(self, agents:list, newGen):
         old = self.grid.get_coord('A')
         # print(f'previous coordinates are {old}')
-        if len(old)==0:                     # if there no agents are in the grid, i.e at the beginning of the run
+        if newGen:                     # if there no agents are in the grid, i.e at the beginning of the run
             for agent in agents:
                 self.grid.set_coord(agent.locatedAt, 'A')       # put agents on the grid
         else:                                # after an iteration, where agents are populated at least once
