@@ -17,6 +17,7 @@ class ga_game:
         self.cross_count = int(len(agent_population) * self.crossover_rate)
         self.cross_count = self.cross_count if self.cross_count % 2 == 0 else self.cross_count + 1
         for i in range(self.n_gens):
+            print(f'STARTING NEW GENERATION {i}')
             # set agent list of gameobject
             self.gameRun.agents = agent_population
             # reset graveyard
@@ -70,6 +71,7 @@ class ga_game:
                 indiv.chromList = indiv.chromList[:n1] + [indiv.chromList[n2]] + indiv.chromList[n1 + 1:n2] + [
                     indiv.chromList[n1]] + indiv.chromList[n2 + 1:]
 
+
     def onepointcrossover(self, seq1:list, seq2:list):
         p_seq1 = randrange(len(seq1))
         p_seq2 = randrange(len(seq2))
@@ -80,5 +82,6 @@ class ga_game:
         return (seq12, seq21)
 
     def reset_game(self, agents):
+        self.gameRun.removeDeadAgents()
         self.gameRun.graveyard = []
-        self.gameRun.cave.updateAgentCoordinates(agents)
+        self.gameRun.cave.updateAgentCoordinates(agents, True)
