@@ -7,7 +7,7 @@ def perceive(agent, grid, agent_id):   # check for perceptions and add to knownP
     perc = grid.grid.get_perc(loc)
     if len(perc) > 0:
         if perc not in agent.knownPhenomena:
-            agent.knownPhenomena.append(perc)
+            agent.knownPhenomena = set().union(agent.knownPhenomena, perc.split("+"))
             print(f'At {loc}, there is a {perc} perception for agent {agent_id}')
 
 
