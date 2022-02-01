@@ -8,7 +8,6 @@ def perceive(agent, grid, agent_id):   # check for perceptions and add to knownP
     if len(perc) > 0:
         if perc not in agent.knownPhenomena:
             agent.knownPhenomena.append(perc)
-            agent.addPhenomenaToChromosome(perc)
             print(f'At {loc}, there is a {perc} perception for agent {agent_id}')
 
 
