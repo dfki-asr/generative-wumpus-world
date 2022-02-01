@@ -21,7 +21,7 @@ class agentobject:
         self.generation = 0
         self.fitness = 0
         self.rules = []
-        self.knownPhenomena = []
+        self.knownPhenomena = ["always"]
         self.currentObservations = []
         self.chromList = chromosome if chromosome else self.initChromosome()
         self.wonGame = False
