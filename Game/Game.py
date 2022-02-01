@@ -9,6 +9,7 @@ def perceive(agent, grid, agent_id):   # check for perceptions and add to knownP
         if perc not in agent.knownPhenomena:
             agent.knownPhenomena = list(set().union(agent.knownPhenomena, perc.split("+")))
             print(f'At {loc}, there is a {perc} perception for agent {agent_id}')
+    return perc
 
 
 def updateStatus(agent, grid, agent_id):  # check if agent alive/dead and assign fitness scores
@@ -46,6 +47,8 @@ def updateStatus(agent, grid, agent_id):  # check if agent alive/dead and assign
             agent.alive = False
             print(f'agent killed due to no move actions in chromList, but also out of arrows')
 
+    print(f'Updating status, agent {agent_id} fatigue is {agent.fatigue}')
+
 class game():
     def __init__(self, n_wumpus, n_golds, n_pits, n_agents, n_initChrom, dimension):
         self.dimension = dimension
@@ -76,13 +79,12 @@ class game():
         while(self.agents):
             for i in range(len(self.agents)):
                 # print(f'agent {i} located at {agents[i].locatedAt}')
-                action, direction = self.agents[i].act()
-                perceive(self.agents[i], self.cave, i)
+                perc = perceive(self.agents[i], self.cave, i)
+                action, direction = self.agents[i].act(perc)
                 print(f'agent {i}: {action} in direction {direction}')
 
                 if action == 'move':
                     self.agents[i].move(direction, self.cave)
-                    print(f'agent fatigue at {self.agents[i].fatigue}')
                 if action == 'shoot':
                     if self.agents[i].arrow:
                         self.agents[i].arrow = False
@@ -94,6 +96,7 @@ class game():
                             print(f'agent {i} killed wumpus at {targCoord}')
                         else:
                             print(f'Arrow missed')
+                    self.agents[i].fatigue -= 1
 
                 if action == 'pickup':
                     if self.agents[i].locatedAt in self.cave.goldCoordinate:
@@ -101,6 +104,7 @@ class game():
                         self.agents[i].wonGame = True
                         self.agents[i].fitness += 200
                         print(f'agent {i} found gold')
+                    self.agents[i].fatigue -= 1
                 updateStatus(self.agents[i], self.cave, i)
                 # print(f'After move, agent {i} located at {self.agents[i].locatedAt}')
             print("\n")
