@@ -22,7 +22,10 @@ def updateStatus(agent, grid, agent_id):  # check if agent alive/dead and assign
         else:
             print(f'agent {agent_id} could find gold')
             agent.fitness += 20
+        if agent.fatigue <= 0:
+            agent.alive = False
         return 0
+
     if agent.fatigue <= 0 :
         print(f'agent {agent_id} located at {agent.locatedAt} starved to death')
         agent.alive = False
@@ -85,6 +88,7 @@ class game():
 
                 if action == 'move':
                     self.agents[i].move(direction, self.cave)
+                    print(f'agent fatigue {self.agents[i].fatigue}')
                 if action == 'shoot':
                     if self.agents[i].arrow:
                         self.agents[i].arrow = False
