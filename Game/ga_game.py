@@ -1,5 +1,5 @@
 from Game.Game import game
-from random import sample, randrange, random
+from random import sample, randrange, random, choice
 from Agent.agentObjet import agentobject
 
 
@@ -10,6 +10,8 @@ class ga_game:
         self.crossover_rate = crossover_rate
         self.cross_count = 0
         self.mutation_rate = mutation_rate
+        self.flip_max = 5 # max number of chromosome elements that get flipped
+                          # during flip mutation
 
     def run(self):
         agent_population = self.gameRun.agents
@@ -66,6 +68,14 @@ class ga_game:
 
             if mutate:
                 self.swapmutation(indiv)
+                self.flipmutation(indiv)
+
+    def flipmutation(self, indiv):
+        numFlipped = randrange(self.flip_max) + 1
+        size = len(indiv.chromList)
+        for _ in range(numFlipped):
+            index = randrange(size)
+            indiv.chromList[index] = ( choice(indiv.knownPhenomena) , indiv.chromList[index][1])
 
 
     def swapmutation(self, indiv):
