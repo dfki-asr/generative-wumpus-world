@@ -15,13 +15,13 @@ def isValidDirection(grid, position):
 
 
 class agentobject:
-    def __init__(self, grid: gridSetup, chromosome = None):
+    def __init__(self, grid: gridSetup, chromosome = None, phenomena = None):
         self.size_limit = 10
         self.fatigue = 20
         self.generation = 0
         self.fitness = 0
         self.rules = []
-        self.knownPhenomena = []
+        self.knownPhenomena = phenomena if phenomena else ["always"]
         self.currentObservations = []
         self.chromList = chromosome if chromosome else self.initChromosome()
         self.wonGame = False
@@ -43,11 +43,6 @@ class agentobject:
             i += 1
         return chrom_list
 
-    def addPhenomenaToChromosome(self, perception):     # adds newly discovered perception with a random action to chromList
-        item = choice(list(tab_of_act.keys()))
-        self.chromList.append((perception, item))
-        print(f'new chromList {self.chromList}')
-
     def getRandomCoordinates(self, num, grid):   # get "num" number of random coordinates which are unique for pits/wumpus/start
         i = 0
         temp_list = []
@@ -59,7 +54,6 @@ class agentobject:
             else:
                 temp_list.append(temp)
                 i += 1
-        # print(temp_list)
         return temp_list
 
     def act(self, ):        # choose a random action from chromosome list
@@ -74,7 +68,6 @@ class agentobject:
             toPos = self.locatedAt[0][0] + directions[dir][0], self.locatedAt[0][1] + directions[dir][1]
             if toPos[0] > grid.grid.dimensions - 1 or toPos[1] > grid.grid.dimensions - 1 or toPos[0] < 0 or toPos[
                 1] < 0:
-                # print(f'continuing because toPos = {toPos}')
                 continue
             else:
                 valid = True

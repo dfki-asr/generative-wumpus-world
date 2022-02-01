@@ -1,5 +1,5 @@
 from Game.Game import game
-from random import sample, randrange, random
+from random import sample, randrange, random, choice
 from Agent.agentObjet import agentobject
 
 
@@ -10,6 +10,8 @@ class ga_game:
         self.crossover_rate = crossover_rate
         self.cross_count = 0
         self.mutation_rate = mutation_rate
+        self.flip_max = 5 # max number of chromosome elements that get flipped
+                          # during flip mutation
 
     def run(self):
         agent_population = self.gameRun.agents
@@ -56,8 +58,9 @@ class ga_game:
             indv1 = mating_pool[randrange(self.cross_count)]
             indv2 = mating_pool[randrange(self.cross_count)]
             chrom1, chrom2 = self.onepointcrossover(indv1.chromList, indv2.chromList)
-            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom1))
-            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom2))
+            phenomena = list(set().union(indv1.knownPhenomena, indv2.knownPhenomena))
+            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom1, phenomena=phenomena))
+            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom2, phenomena=phenomena))
         return new_pop
 
     def mutate(self, population):
@@ -65,12 +68,22 @@ class ga_game:
             mutate = random() < self.mutation_rate
 
             if mutate:
-                # indiv.chromosome = indiv.randomChromosome()
-                size = len(indiv.chromList)
-                n1, n2 = randrange(size), randrange(size)
-                indiv.chromList = indiv.chromList[:n1] + [indiv.chromList[n2]] + indiv.chromList[n1 + 1:n2] + [
-                    indiv.chromList[n1]] + indiv.chromList[n2 + 1:]
+                self.swapmutation(indiv)
+                self.flipmutation(indiv)
 
+    def flipmutation(self, indiv):
+        numFlipped = randrange(self.flip_max) + 1
+        size = len(indiv.chromList)
+        for _ in range(numFlipped):
+            index = randrange(size)
+            indiv.chromList[index] = ( choice(indiv.knownPhenomena) , indiv.chromList[index][1])
+
+
+    def swapmutation(self, indiv):
+        size = len(indiv.chromList)
+        n1, n2 = randrange(size), randrange(size)
+        indiv.chromList = indiv.chromList[:n1] + [indiv.chromList[n2]] + indiv.chromList[n1 + 1:n2] + [
+        indiv.chromList[n1]] + indiv.chromList[n2 + 1:]
 
     def onepointcrossover(self, seq1:list, seq2:list):
         p_seq1 = randrange(len(seq1))
