@@ -43,11 +43,6 @@ class agentobject:
             i += 1
         return chrom_list
 
-    def addPhenomenaToChromosome(self, perception):     # adds newly discovered perception with a random action to chromList
-        item = choice(list(tab_of_act.keys()))
-        self.chromList.append((perception, item))
-        print(f'new chromList {self.chromList}')
-
     def getRandomCoordinates(self, num, grid):   # get "num" number of random coordinates which are unique for pits/wumpus/start
         i = 0
         temp_list = []
