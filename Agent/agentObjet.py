@@ -54,7 +54,6 @@ class agentobject:
             else:
                 temp_list.append(temp)
                 i += 1
-        # print(temp_list)
         return temp_list
 
     def act(self, ):        # choose a random action from chromosome list
