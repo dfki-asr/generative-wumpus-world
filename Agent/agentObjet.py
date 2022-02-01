@@ -69,7 +69,6 @@ class agentobject:
             toPos = self.locatedAt[0][0] + directions[dir][0], self.locatedAt[0][1] + directions[dir][1]
             if toPos[0] > grid.grid.dimensions - 1 or toPos[1] > grid.grid.dimensions - 1 or toPos[0] < 0 or toPos[
                 1] < 0:
-                # print(f'continuing because toPos = {toPos}')
                 continue
             else:
                 valid = True
