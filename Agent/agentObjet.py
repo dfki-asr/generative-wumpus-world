@@ -15,13 +15,13 @@ def isValidDirection(grid, position):
 
 
 class agentobject:
-    def __init__(self, grid: gridSetup, chromosome = None):
+    def __init__(self, grid: gridSetup, chromosome = None, phenomena = None):
         self.size_limit = 10
         self.fatigue = 20
         self.generation = 0
         self.fitness = 0
         self.rules = []
-        self.knownPhenomena = ["always"]
+        self.knownPhenomena = phenomena if phenomena else ["always"]
         self.currentObservations = []
         self.chromList = chromosome if chromosome else self.initChromosome()
         self.wonGame = False
