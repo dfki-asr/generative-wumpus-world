@@ -65,12 +65,14 @@ class ga_game:
             mutate = random() < self.mutation_rate
 
             if mutate:
-                # indiv.chromosome = indiv.randomChromosome()
-                size = len(indiv.chromList)
-                n1, n2 = randrange(size), randrange(size)
-                indiv.chromList = indiv.chromList[:n1] + [indiv.chromList[n2]] + indiv.chromList[n1 + 1:n2] + [
-                    indiv.chromList[n1]] + indiv.chromList[n2 + 1:]
+                self.swapmutation(indiv)
 
+
+    def swapmutation(self, indiv):
+        size = len(indiv.chromList)
+        n1, n2 = randrange(size), randrange(size)
+        indiv.chromList = indiv.chromList[:n1] + [indiv.chromList[n2]] + indiv.chromList[n1 + 1:n2] + [
+        indiv.chromList[n1]] + indiv.chromList[n2 + 1:]
 
     def onepointcrossover(self, seq1:list, seq2:list):
         p_seq1 = randrange(len(seq1))
