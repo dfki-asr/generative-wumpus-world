@@ -1,7 +1,7 @@
 from Game.Game import game
 from random import sample, randrange, random, choice
 from Agent.agentObjet import agentobject
-
+import matplotlib.pyplot as plt
 
 class ga_game:
     def __init__(self, n_generations, crossover_rate, mutation_rate):
@@ -15,6 +15,7 @@ class ga_game:
 
     def run(self):
         agent_population = self.gameRun.agents
+        best_fitness = []
         # how many brand new chromosomes, vs take over from prev gen gives cross_count
         self.cross_count = int(len(agent_population) * self.crossover_rate)
         self.cross_count = self.cross_count if self.cross_count % 2 == 0 else self.cross_count + 1
@@ -27,10 +28,18 @@ class ga_game:
             self.gameRun.run_game()
             # get sorted graveyard and best chromList
             current_gen_sorted = self.gameRun.graveyard  # current population sorted by fitness (desc)
+            # store the best fitness of current generation
+            best_fitness.append(current_gen_sorted[0].fitness)
             # reproduce, select, crossover, mutate
             agent_population = self.reproduce(current_gen_sorted, i)
             # this gets new population
             self.reset_game(agent_population)
+        plt.plot(best_fitness)
+        plt.xlabel('Generation number')
+        plt.ylabel('Highest fitness')
+        plt.title('Fitness progression over generations')
+        plt.show()
+
 
     def reproduce(self, population, generation):
         mating_pool = self.selection(population)
