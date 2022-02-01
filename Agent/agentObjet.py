@@ -56,9 +56,27 @@ class agentobject:
                 i += 1
         return temp_list
 
-    def act(self, ):        # choose a random action from chromosome list
-        obs, act = choice(self.chromList)
-        return tab_of_act[act]
+    def act(self, perception):        # choose a random action from chromosome list
+        if len(perception) > 0:
+            print(f'there is a perception of {perception} in act method')
+            perc_based_actions = [item for item in self.chromList if item[0] == perception]
+            if len(perc_based_actions)>0:
+                print(f'corresponding chromosome for {perception} in {self.chromList}')
+                obs, action = choice(perc_based_actions)
+            else:
+                random_actions = [item for item in self.chromList if item[0] == 'always']
+                if len(random_actions) > 0:
+                    obs, action = choice(random_actions)
+                else:
+                    obs, action = choice(self.chromList)
+                print(f'random actions are as follows {random_actions}')
+        else:
+            random_actions = [item for item in self.chromList if item[0] == 'always']
+            if len(random_actions) > 0:
+                obs, action = choice(random_actions)
+            else:
+                obs, action = choice(self.chromList)
+        return tab_of_act[action]
 
 
     def random_move(self, grid):    # move randomly
