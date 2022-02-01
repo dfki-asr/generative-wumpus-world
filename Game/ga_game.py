@@ -58,8 +58,9 @@ class ga_game:
             indv1 = mating_pool[randrange(self.cross_count)]
             indv2 = mating_pool[randrange(self.cross_count)]
             chrom1, chrom2 = self.onepointcrossover(indv1.chromList, indv2.chromList)
-            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom1))
-            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom2))
+            phenomena = list(set().union(indv1.knownPhenomena, indv2.knownPhenomena))
+            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom1, phenomena=phenomena))
+            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom2, phenomena=phenomena))
         return new_pop
 
     def mutate(self, population):
