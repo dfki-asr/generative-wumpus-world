@@ -20,7 +20,7 @@ class ga_game:
         self.cross_count = int(len(agent_population) * self.crossover_rate)
         self.cross_count = self.cross_count if self.cross_count % 2 == 0 else self.cross_count + 1
         for i in range(self.n_gens):
-            print(f'STARTING NEW GENERATION {i}')
+            print(f'\nSTARTING NEW GENERATION {i}')
             # set agent list of gameobject
             self.gameRun.agents = agent_population
             # reset graveyard
@@ -32,6 +32,8 @@ class ga_game:
             best_fitness.append(current_gen_sorted[0].fitness)
             # reproduce, select, crossover, mutate
             agent_population = self.reproduce(current_gen_sorted, i)
+            for i in range(len(agent_population)):
+                agent_population[i].id = i
             # this gets new population
             self.reset_game(agent_population)
         plt.plot(best_fitness)
