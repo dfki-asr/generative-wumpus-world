@@ -8,36 +8,36 @@ def perceive(agent, grid, agent_id):   # check for perceptions and add to knownP
     if len(perc) > 0:
         if perc not in agent.knownPhenomena:
             agent.knownPhenomena = list(set().union(agent.knownPhenomena, perc.split("+")))
-            print(f'At {loc}, there is a {perc} perception for agent {agent_id}')
+            # print(f'At {loc}, there is a {perc} perception for agent {agent_id}')
     return perc
 
 
-def updateStatus(agent, grid, agent_id):  # check if agent alive/dead and assign fitness scores
+def updateStatus(agent, grid, statusString):  # check if agent alive/dead and assign fitness scores
     loc = agent.locatedAt
     # print(f'location {loc} p {grid.pitCoordinates} s {grid.stenchCoord}')
     if loc[0] in grid.goldCoordinate:
         if agent.gotGold:
-            print(f'agent {agent_id} won game, has fitness {agent.fitness}, exiting')
+            statusString += f'agent {agent.id} won game, has fitness {agent.fitness}, exiting, '
             agent.alive = False
         else:
-            print(f'agent {agent_id} could find gold')
+            statusString += f'agent {agent.id} could find gold, '
             agent.fitness += 20
         if agent.fatigue <= 0:
             agent.alive = False
         return 0
 
     if agent.fatigue <= 0 :
-        print(f'agent {agent_id} located at {agent.locatedAt} starved to death')
+        statusString += f'agent {agent.id} located at {agent.locatedAt} starved to death, '
         agent.alive = False
         return
     elif loc[0] in grid.wumpusCoordinates :
-        print(f'agent {agent_id} located at {agent.locatedAt} was eaten by Wumpus')
+        print(f'agent {agent.id} located at {agent.locatedAt} was eaten by Wumpus')
         agent.alive = False
         agent.fitness -= 10
         print("------------------")
         return
     elif loc[0] in grid.pitCoordinates :
-        print(f'agent {agent_id} located at {agent.locatedAt} fell into a pit')
+        print(f'agent {agent.id} located at {agent.locatedAt} fell into a pit')
         agent.alive = False
         agent.fitness -= 10
         print("------------------")
@@ -48,9 +48,11 @@ def updateStatus(agent, grid, agent_id):  # check if agent alive/dead and assign
         valid_actions = ['E', 'W', 'N', 'S']
         if not listIntersection(actions_left, valid_actions):
             agent.alive = False
-            print(f'agent killed due to no move actions in chromList, but also out of arrows')
+            statusString += f'agent killed due to no move actions in chromList, but also out of arrows, '
 
-    print(f'Updating status, agent {agent_id} fatigue is {agent.fatigue}')
+    statusString += f'Agent {agent.id} located {agent.locatedAt}, fatigue {agent.fatigue}'
+    print(statusString)
+
 
 class game():
     def __init__(self, n_wumpus, n_golds, n_pits, n_agents, n_initChrom, dimension):
@@ -64,11 +66,12 @@ class game():
         self.print_agent_init_chromList()
         self.graveyard = []
         self.bestIndividual = None
+        self.statusString = ""
 
     def initialize_agents(self):    # init agents and add them to grid
         agents = []
         for i in range(self.n_agents):
-            temp = agentobject(self.cave)
+            temp = agentobject(self.cave, count=i)
             agents.append(temp)
         return agents
 
@@ -81,25 +84,26 @@ class game():
     def run_game(self):
         while(self.agents):
             for i in range(len(self.agents)):
+                self.statusString = ""
                 # print(f'agent {i} located at {agents[i].locatedAt}')
                 perc = perceive(self.agents[i], self.cave, i)
                 action, direction = self.agents[i].act(perc)
-                print(f'agent {i}: {action} in direction {direction}')
+                self.statusString += ""
 
                 if action == 'move':
                     self.agents[i].move(direction, self.cave)
-                    print(f'agent fatigue {self.agents[i].fatigue}')
+                    self.statusString = f'Agent {self.agents[i].id} move {direction},  '
                 if action == 'shoot':
                     if self.agents[i].arrow:
                         self.agents[i].arrow = False
                         targCoord = self.agents[i].shootTargetCoord(self.cave, direction)
-                        print(f'agent {i} shot from {self.agents[i].locatedAt} to {targCoord}')
+                        self.statusString += f'agent {self.agents[i].id} shot from {self.agents[i].locatedAt} to {targCoord}, '
                         if targCoord in self.cave.wumpusCoordinates:
                             self.agents[i].killedWumpus = True
                             self.agents[i].fitness += 5
-                            print(f'agent {i} killed wumpus at {targCoord}')
+                            self.statusString += f'agent {self.agents[i].id} killed wumpus at {targCoord}, '
                         else:
-                            print(f'Arrow missed')
+                            self.statusString +=f'Arrow missed, '
                     self.agents[i].fatigue -= 1
 
                 if action == 'pickup':
@@ -107,10 +111,10 @@ class game():
                         self.agents[i].gotGold = True
                         self.agents[i].wonGame = True
                         self.agents[i].fitness += 200
-                        print(f'agent {i} found gold')
+                        self.statusString += f'agent {i} found gold, '
                     self.agents[i].fatigue -= 1
-                updateStatus(self.agents[i], self.cave, i)
-                # print(f'After move, agent {i} located at {self.agents[i].locatedAt}')
+                updateStatus(self.agents[i], self.cave, self.statusString)
+                # print(f'After move, agent {self.agents[i].id} located at {self.agents[i].locatedAt}')
             print("\n")
             # print(f'agent length after removing dead guys {len(self.agents)}')
             self.removeDeadAgents()
@@ -123,7 +127,7 @@ class game():
         fitness_list = [indiv.fitness for indiv in self.graveyard]
         self.graveyard.sort(key=lambda element: element.fitness, reverse=True) # graveyard sorted (desc) by fitness
         self.bestIndividual = self.graveyard[0].chromList
-        print(self.bestIndividual)
+        print(f'The best individual\'s chromosome is {self.bestIndividual}')
 
 
     def removeDeadAgents(self):
