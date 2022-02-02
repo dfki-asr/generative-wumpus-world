@@ -15,7 +15,7 @@ def isValidDirection(grid, position):
 
 
 class agentobject:
-    def __init__(self, grid: gridSetup, chromosome = None, phenomena = None):
+    def __init__(self, grid: gridSetup, chromosome = None, phenomena = None, count=0):
         self.size_limit = 10
         self.fatigue = 20
         self.generation = 0
@@ -29,6 +29,7 @@ class agentobject:
         self.arrow = True
         self.gotGold = False
         self.killedWumpus = False
+        self.id = count
         self.initChromosome()
         self.action_generator = (act for act in self.chromList)
         self.locatedAt = self.getRandomCoordinates(1, grid)
@@ -58,10 +59,10 @@ class agentobject:
 
     def act(self, perception):        # choose a random action from chromosome list
         if len(perception) > 0:
-            print(f'there is a perception of {perception} in act method')
+            # print(f'there is a perception of {perception} in act method')
             perc_based_actions = [item for item in self.chromList if item[0] == perception]
             if len(perc_based_actions)>0:
-                print(f'corresponding chromosome for {perception} in {self.chromList}')
+                # print(f'corresponding chromosome for {perception} in {self.chromList}')
                 obs, action = choice(perc_based_actions)
             else:
                 random_actions = [item for item in self.chromList if item[0] == 'always']
@@ -69,7 +70,7 @@ class agentobject:
                     obs, action = choice(random_actions)
                 else:
                     obs, action = choice(self.chromList)
-                print(f'random actions are as follows {random_actions}')
+                # print(f'random actions are as follows {random_actions}')
         else:
             random_actions = [item for item in self.chromList if item[0] == 'always']
             if len(random_actions) > 0:
