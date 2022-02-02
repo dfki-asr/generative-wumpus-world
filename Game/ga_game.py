@@ -87,7 +87,9 @@ class ga_game:
         size = len(indiv.chromList)
         for _ in range(numFlipped):
             index = randrange(size)
-            indiv.chromList[index] = ( choice(indiv.knownPhenomena) , indiv.chromList[index][1])
+            (perc, react) = indiv.chromList[index]
+            if (perc, react) != ('g','P') : # Agents should never forget that
+                indiv.chromList[index] = ( choice(indiv.knownPhenomena) , indiv.chromList[index][1])
 
 
     def swapmutation(self, indiv):
