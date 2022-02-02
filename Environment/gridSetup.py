@@ -17,7 +17,7 @@ class gridSetup():
         self.grid.set_coord(self.goldCoordinate, 'G')
         self.breezeCoord = self.grid.neighboursOf(self.pitCoordinates)
         self.stenchCoord = self.grid.neighboursOf(self.wumpusCoordinates)
-        self.glitterCoord = self.grid.neighboursOf(self.goldCoordinate)
+        self.glitterCoord = self.goldCoordinate
         self.grid.set_perc(self.breezeCoord, 'b')
         self.grid.set_perc(self.stenchCoord, 's')
         self.grid.set_perc(self.glitterCoord, 'g')
