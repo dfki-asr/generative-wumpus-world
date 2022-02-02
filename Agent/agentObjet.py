@@ -38,6 +38,7 @@ class agentobject:
         chrom_list = []
         rand_size = randrange(3, self.size_limit)
         i = 0
+        chrom_list.append(('g','P')) # digging for gold is the initial instinct of any agent
         while i < rand_size:
             item = choice(list(tab_of_act.keys()))
             chrom_list.append(("always", item))
