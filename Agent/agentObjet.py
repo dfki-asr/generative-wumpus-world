@@ -16,8 +16,9 @@ def isValidDirection(grid, position):
 
 class agentobject:
     def __init__(self, grid: gridSetup, chromosome = None, phenomena = None, count=0):
+        self.grid = grid
         self.size_limit = 10
-        self.fatigue = 20
+        self.fatigue = 40
         self.generation = 0
         self.fitness = 0
         self.rules = []
@@ -33,6 +34,20 @@ class agentobject:
         self.initChromosome()
         self.action_generator = (act for act in self.chromList)
         self.locatedAt = self.getRandomCoordinates(1, grid)
+
+    def initParameters(self, count):
+        self.size_limit = 10
+        self.fatigue = 40
+        self.fitness = 0
+        self.wonGame = False
+        self.alive = True
+        self.arrow = True
+        self.gotGold = False
+        self.killedWumpus = False
+        self.id = count
+        self.initChromosome()
+        self.action_generator = (act for act in self.chromList)
+        self.locatedAt = self.getRandomCoordinates(1, self.grid)
 
     def initChromosome(self):    # initialises the agent with random chromosomes of random length (between 3 and self.size_limit)
         chrom_list = []
@@ -110,7 +125,6 @@ class agentobject:
             newPos = self.locatedAt[0][0], y - 1
 
         self.fatigue -= 1
-
         if isValidDirection(grid, newPos):
             self.locatedAt.pop(0)
             self.locatedAt.append(newPos)
