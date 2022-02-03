@@ -50,7 +50,7 @@ def updateStatus(agent, grid, statusString):  # check if agent alive/dead and as
             agent.alive = False
             statusString += f'agent killed due to no move actions in chromList, but also out of arrows, '
 
-    statusString += f'Agent {agent.id} located {agent.locatedAt}, fatigue {agent.fatigue}'
+    statusString += f'Agent {agent.id} located {agent.locatedAt}, fatigue {agent.fatigue}, fitness {agent.fitness}'
     print(statusString)
 
 
