@@ -119,7 +119,7 @@ class agentobject:
         targDir = np.dot(self.facing, rotMat)
         newPos = tuple(self.locatedAt[0] + targDir)
         self.facing = tuple(targDir)
-
+        self.fatigue -= 1
         if isValidDirection(grid, newPos):
             self.locatedAt.pop(0)
             self.locatedAt.append(newPos)
