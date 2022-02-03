@@ -22,7 +22,7 @@ class agentobject:
         self.generation = 0
         self.fitness = 0
         self.rules = []
-        self.knownPhenomena = phenomena if phenomena else ["always"]
+        self.knownPhenomena = phenomena if phenomena else ["g"]
         self.currentObservations = []
         self.chromList = chromosome if chromosome else self.initChromosome()
         self.wonGame = False
@@ -59,7 +59,8 @@ class agentobject:
         chrom_list.append(('g','P')) # digging for gold is the initial instinct of any agent
         while i < rand_size:
             item = choice(list(tab_of_act.keys()))
-            chrom_list.append(("always", item))
+            key = choice(self.knownPhenomena)
+            chrom_list.append((key, item))
             i += 1
         return chrom_list
 
