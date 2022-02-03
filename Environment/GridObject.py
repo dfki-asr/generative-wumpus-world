@@ -31,23 +31,23 @@ class Grid:
     def set_coord(self, coord, value):
         for coord_i in coord:
             x, y = coord_i
-            if self.grid[x][y] == "":
-                self.grid[x][y] += value
+            if self.grid[y][x] == "":
+                self.grid[y][x] += value
             else:
-                self.grid[x][y] += ("+" + value)
+                self.grid[y][x] += ("+" + value)
 
     def set_perc(self, coord, value):
         for coord_i in coord:
             x, y = coord_i
-            if self.perceptions[x][y] == "":
-                self.perceptions[x][y] += value
+            if self.perceptions[y][x] == "":
+                self.perceptions[y][x] += value
             else:
-                self.perceptions[x][y] += ("+" + value)
+                self.perceptions[y][x] += ("+" + value)
 
     def get_perc(self, coord):
         for coord_i in coord:
             x, y = coord_i
-            return self.perceptions[x][y]
+            return self.perceptions[y][x]
 
     def get_coord(self, value):
         ret_vals = []
@@ -58,11 +58,11 @@ class Grid:
                 if f == -1 or l == -1:
                     continue
                 elif f == l:
-                    ret_vals.append((i,j))
+                    ret_vals.append((j,i))
                 else:
                     num = ((l - f)/2)+1
                     for _ in range(int(num)):
-                        ret_vals.append((i, j))
+                        ret_vals.append((j, i))
         return ret_vals
 
         # raise ValueError("{!r} is not in list".format(value))
