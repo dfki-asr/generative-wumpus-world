@@ -1,11 +1,12 @@
+from Actions.directionMappings import directions
 from Game.Game import game
 from random import sample, randrange, random, choice
 from Agent.agentObjet import agentobject
 import matplotlib.pyplot as plt
 
 class ga_game:
-    def __init__(self, n_generations, crossover_rate, mutation_rate):
-        self.gameRun = game(n_wumpus=1, n_golds=1, n_pits=9, n_agents=5, n_initChrom=4, dimension=10)
+    def __init__(self, n_generations, n_agents, crossover_rate, mutation_rate):
+        self.gameRun = game(n_wumpus=1, n_golds=1, n_pits=9, n_agents=n_agents, n_initChrom=4, dimension=10)
         self.n_gens = n_generations
         self.crossover_rate = crossover_rate
         self.cross_count = 0
@@ -46,7 +47,8 @@ class ga_game:
     def printNewPopDetails(self):
         for i in range(len(self.gameRun.agents)):
             loc = self.gameRun.agents[i].locatedAt
-            print(f'agent {i} located at {loc} with chromosomes {self.gameRun.agents[i].chromList}')
+            facing = list(directions.keys())[list(directions.values()).index(self.gameRun.agents[i].facing)]
+            print(f'agent {i} located at {loc}, facing {facing} with chromosomes {self.gameRun.agents[i].chromList}')
         print(self.gameRun.cave.grid)
 
 
