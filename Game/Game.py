@@ -1,3 +1,4 @@
+from Actions.directionMappings import directions
 from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
 import numpy as np
@@ -45,12 +46,12 @@ def updateStatus(agent, grid, statusString):  # check if agent alive/dead and as
 
     if not agent.arrow:
         actions_left = [action[1] for action in agent.chromList]
-        valid_actions = ['E', 'W', 'N', 'S']
+        valid_actions = ['F', 'B', 'L', 'R']
         if not listIntersection(actions_left, valid_actions):
             agent.alive = False
             statusString += f'agent killed due to no move actions in chromList, but also out of arrows, '
-
-    statusString += f'Agent {agent.id} located {agent.locatedAt}, fatigue {agent.fatigue}, fitness {agent.fitness}'
+    facing = list(directions.keys())[list(directions.values()).index(agent.facing)]
+    statusString += f'Agent {agent.id} located {agent.locatedAt}, facing {facing} fatigue {agent.fatigue}, fitness {agent.fitness}'
     print(statusString)
 
 
@@ -63,7 +64,7 @@ class game():
         self.agents = []
         self.agents = self.initialize_agents()
         self.cave.updateAgentCoordinates(self.agents, True)
-        self.print_agent_init_chromList()
+        # self.print_agent_init_chromList()
         self.graveyard = []
         self.bestIndividual = None
         self.statusString = ""
