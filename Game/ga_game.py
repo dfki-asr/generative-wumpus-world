@@ -119,4 +119,4 @@ class ga_game:
     def reset_game(self, agents):
         self.gameRun.removeDeadAgents()
         self.gameRun.graveyard = []
-        self.gameRun.cave.updateAgentCoordinates(agents, True)
+        self.gameRun.cave.resetGrid(agents, True)
