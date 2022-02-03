@@ -44,12 +44,12 @@ def updateStatus(agent, grid, statusString):  # check if agent alive/dead and as
         print("------------------")
         return
 
-    if not agent.arrow:
-        actions_left = [action[1] for action in agent.chromList]
-        valid_actions = ['F', 'B', 'L', 'R']
-        if not listIntersection(actions_left, valid_actions):
-            agent.alive = False
-            statusString += f'agent killed due to no move actions in chromList, but also out of arrows, '
+    # if not agent.arrow:
+    #     actions_left = [action[1] for action in agent.chromList]
+    #     valid_actions = ['F', 'B', 'L', 'R']
+    #     if not listIntersection(actions_left, valid_actions):
+    #         agent.alive = False
+    #         statusString += f'agent killed due to no move actions in chromList, but also out of arrows, '
     facing = list(directions.keys())[list(directions.values()).index(agent.facing)]
     statusString += f'Agent {agent.id} located {agent.locatedAt}, facing {facing} fatigue {agent.fatigue}, fitness {agent.fitness}'
     print(statusString)
