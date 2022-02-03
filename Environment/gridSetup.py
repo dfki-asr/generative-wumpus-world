@@ -3,6 +3,7 @@ from .GridObject import Grid
 class gridSetup():
     def __init__(self, dimension, n_pits: int, n_golds: int, n_wumpus:int):
         self.grid = Grid(dimension)
+        self.dimension = dimension
         self.pitCoordinates = []
         self.wumpusCoordinates = []
         self.stenchCoord = []
@@ -58,3 +59,13 @@ class gridSetup():
             for agent in agents:
                  if agent.alive:
                     self.grid.set_coord(agent.locatedAt, 'A')  # populate new agent locations on grid
+
+    def resetGrid(self, agent:list, newGen):
+        self.grid = Grid(self.dimension)
+        self.grid.set_coord(self.wumpusCoordinates, 'W')
+        self.grid.set_coord(self.pitCoordinates, 'P')
+        self.grid.set_coord(self.goldCoordinate, 'G')
+        self.grid.set_perc(self.breezeCoord, 'b')
+        self.grid.set_perc(self.stenchCoord, 's')
+        self.grid.set_perc(self.glitterCoord, 'g')
+        self.updateAgentCoordinates(agent, newGen)
