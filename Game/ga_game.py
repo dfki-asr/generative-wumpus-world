@@ -23,6 +23,7 @@ class ga_game:
             print(f'\nSTARTING NEW GENERATION {i}')
             # set agent list of gameobject
             self.gameRun.agents = agent_population
+            self.printNewPopDetails()
             # reset graveyard
             # run game for this population
             self.gameRun.run_game()
@@ -33,7 +34,7 @@ class ga_game:
             # reproduce, select, crossover, mutate
             agent_population = self.reproduce(current_gen_sorted, i)
             for i in range(len(agent_population)):
-                agent_population[i].id = i
+                agent_population[i].initParameters(i)
             # this gets new population
             self.reset_game(agent_population)
         plt.plot(best_fitness)
@@ -41,6 +42,12 @@ class ga_game:
         plt.ylabel('Highest fitness')
         plt.title('Fitness progression over generations')
         plt.show()
+
+    def printNewPopDetails(self):
+        for i in range(len(self.gameRun.agents)):
+            loc = self.gameRun.agents[i].locatedAt
+            print(f'agent {i} located at {loc} with chromosomes {self.gameRun.agents[i].chromList}')
+        print(self.gameRun.cave.grid)
 
 
     def reproduce(self, population, generation):
