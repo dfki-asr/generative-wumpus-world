@@ -1,8 +1,8 @@
 from random import choice, randrange
-from Actions import actionMappings
 from Actions.actionMappings import tab_of_act
 from Environment.gridSetup import gridSetup
-from Actions.directionMappings import directions
+from Actions.directionMappings import directions, angles
+import numpy as np
 
 
 def isValidDirection(grid, position):
@@ -34,6 +34,9 @@ class agentobject:
         self.initChromosome()
         self.action_generator = (act for act in self.chromList)
         self.locatedAt = self.getRandomCoordinates(1, grid)
+        self.facing =  choice(list(directions.values()))
+
+        # print(f'AGENT FACING: {list(directions.keys())[list(directions.values()).index(self.facing)]}')
 
     def initParameters(self, count):
         self.size_limit = 10
@@ -93,6 +96,7 @@ class agentobject:
                 obs, action = choice(random_actions)
             else:
                 obs, action = choice(self.chromList)
+        print(f'chosen action {tab_of_act[action]}')
         return tab_of_act[action]
 
 
@@ -109,43 +113,26 @@ class agentobject:
         self.locatedAt.pop(0)
         self.locatedAt.append(toPos)
 
-    def move(self, direction, grid):    # move in given "direction" on the "grid"
-        x, y = self.locatedAt[0]
+    def move(self, direction, grid):  # move in given "direction" on the "grid"
+        angle = angles[direction]
+        rotMat = rotationMatrix(angle)
+        targDir = np.dot(self.facing, rotMat)
+        newPos = tuple(self.locatedAt[0] + targDir)
+        self.facing = tuple(targDir)
 
-        if direction == 'N':
-            newPos = self.locatedAt[0][0] - 1, y
-
-        elif direction == 'S':
-            newPos = self.locatedAt[0][0] + 1, y
-
-        elif direction == 'E':
-            newPos = self.locatedAt[0][0], y + 1
-
-        elif direction == 'W':
-            newPos = self.locatedAt[0][0], y - 1
-
-        self.fatigue -= 1
         if isValidDirection(grid, newPos):
             self.locatedAt.pop(0)
             self.locatedAt.append(newPos)
             self.fitness += 1
 
-
     def shootTargetCoord(self, grid, direction):  #  get the target coordinate where arrow will be shot
-        x, y = self.locatedAt[0]
+        angle = angles[direction]
+        rotMat = rotationMatrix(angle)
+        targDir = np.dot(self.facing, rotMat)
+        newPos = tuple(self.locatedAt[0] + targDir)
+        return newPos
 
-        if direction == 'N':
-            targetPos = self.locatedAt[0][0] - 1, y
-
-        elif direction == 'S':
-            targetPos = self.locatedAt[0][0] + 1, y
-
-        elif direction == 'E':
-            targetPos = self.locatedAt[0][0], y + 1
-
-        elif direction == 'W':
-            targetPos = self.locatedAt[0][0], y - 1
-
-        if isValidDirection(grid, targetPos):
-            return targetPos
-
+def rotationMatrix(angle):
+    a11 = np.cos(angle * (np.pi / 180))
+    a12 = np.sin(angle * (np.pi / 180))
+    return np.array([[a11, -a12], [a12, a11]]).astype(np.int)
