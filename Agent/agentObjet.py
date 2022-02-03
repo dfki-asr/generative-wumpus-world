@@ -78,26 +78,14 @@ class agentobject:
         return temp_list
 
     def act(self, perception):        # choose a random action from chromosome list
-        if len(perception) > 0:
-            # print(f'there is a perception of {perception} in act method')
-            perc_based_actions = [item for item in self.chromList if item[0] == perception]
-            if len(perc_based_actions)>0:
-                # print(f'corresponding chromosome for {perception} in {self.chromList}')
-                obs, action = choice(perc_based_actions)
-            else:
-                random_actions = [item for item in self.chromList if item[0] == 'always']
-                if len(random_actions) > 0:
-                    obs, action = choice(random_actions)
-                else:
-                    obs, action = choice(self.chromList)
-                # print(f'random actions are as follows {random_actions}')
+        perc_based_actions = [item for item in self.chromList if item[0] == perception] if len(perception) > 0 else None
+
+        if len(perception) == 0 or not perc_based_actions:
+            action = choice(['F','B','L','R'])
+
         else:
-            random_actions = [item for item in self.chromList if item[0] == 'always']
-            if len(random_actions) > 0:
-                obs, action = choice(random_actions)
-            else:
-                obs, action = choice(self.chromList)
-        print(f'chosen action {tab_of_act[action]}')
+            obs, action = choice(perc_based_actions)
+
         return tab_of_act[action]
 
 
