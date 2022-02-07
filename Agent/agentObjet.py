@@ -33,7 +33,7 @@ class agentobject:
         self.id = count
         self.initChromosome()
         self.action_generator = (act for act in self.chromList)
-        self.locatedAt = self.getRandomCoordinates(1, grid)
+        self.locatedAt = self.getRandomCoordinates(grid)
         self.facing =  choice(list(directions.values()))
 
         # print(f'AGENT FACING: {list(directions.keys())[list(directions.values()).index(self.facing)]}')
@@ -50,7 +50,7 @@ class agentobject:
         self.id = count
         self.initChromosome()
         self.action_generator = (act for act in self.chromList)
-        self.locatedAt = self.getRandomCoordinates(1, self.grid)
+        self.locatedAt = self.getRandomCoordinates(self.grid)
 
     def initChromosome(self):    # initialises the agent with random chromosomes of random length (between 3 and self.size_limit)
         chrom_list = []
@@ -62,18 +62,12 @@ class agentobject:
             i += 1
         return chrom_list
 
-    def getRandomCoordinates(self, num, grid):   # get "num" number of random coordinates which are unique for pits/wumpus/start
-        i = 0
-        temp_list = []
-        while i < num:
-            temp = randrange(grid.grid.dimensions), randrange(grid.grid.dimensions)
-            if temp in grid.pitCoordinates or temp in grid.wumpusCoordinates or temp in grid.goldCoordinate or temp == (
-                    0, 0):
-                continue
-            else:
-                temp_list.append(temp)
-                i += 1
-        return temp_list
+    def getRandomCoordinates(self, grid):
+        temp = (0,0)
+        while temp in grid.pitCoordinates or temp in grid.wumpusCoordinates or temp in grid.goldCoordinate or temp == (
+                0, 0):
+                temp = randrange(grid.grid.dimensions), randrange(grid.grid.dimensions)
+        return [temp]
 
     def act(self, perception):        # choose a random action from chromosome list
         perc_based_actions = [item for item in self.chromList if item[0] == perception] if len(perception) > 0 else None
