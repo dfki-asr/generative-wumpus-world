@@ -109,10 +109,9 @@ class ga_game:
 
     def onepointcrossover(self, seq1:list, seq2:list):
         p_seq1 = randrange(len(seq1))
-        p_seq2 = randrange(len(seq2))
 
-        seq12 = seq1[:p_seq1] + seq2[p_seq2:]
-        seq21 = seq2[:p_seq2] + seq1[p_seq1:]
+        seq12 = seq1[:p_seq1] + seq2[p_seq1:]
+        seq21 = seq2[:p_seq1] + seq1[p_seq1:]
 
         return (seq12, seq21)
 
