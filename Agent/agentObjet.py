@@ -31,7 +31,6 @@ class agentobject:
         self.gotGold = False
         self.killedWumpus = False
         self.id = count
-        self.initChromosome()
         self.action_generator = (act for act in self.chromList)
         self.locatedAt = self.getRandomCoordinates(grid)
         self.facing =  choice(list(directions.values()))
@@ -48,7 +47,6 @@ class agentobject:
         self.gotGold = False
         self.killedWumpus = False
         self.id = count
-        self.initChromosome()
         self.action_generator = (act for act in self.chromList)
         self.locatedAt = self.getRandomCoordinates(self.grid)
 
