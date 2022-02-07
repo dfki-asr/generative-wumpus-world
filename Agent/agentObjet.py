@@ -54,10 +54,8 @@ class agentobject:
 
     def initChromosome(self):    # initialises the agent with random chromosomes of random length (between 3 and self.size_limit)
         chrom_list = []
-        rand_size = randrange(3, self.size_limit)
-        i = 0
         chrom_list.append(('g','P')) # digging for gold is the initial instinct of any agent
-        while i < rand_size:
+        for i in range(1, self.size_limit): # starting to count at 1 because first pair is digging for gold
             item = choice(list(tab_of_act.keys()))
             key = choice(self.knownPhenomena)
             chrom_list.append((key, item))
