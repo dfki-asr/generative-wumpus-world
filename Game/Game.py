@@ -1,7 +1,6 @@
 from Actions.directionMappings import directions
 from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
-import numpy as np
 
 def perceive(agent, grid, agent_id):   # check for perceptions and add to knownPhenomena if not already there
     loc = agent.locatedAt
@@ -30,7 +29,7 @@ def updateStatus(agent, grid, statusString):  # check if agent alive/dead and as
     if agent.fatigue <= 0 :
         statusString += f'agent {agent.id} located at {agent.locatedAt} starved to death, '
         agent.alive = False
-        return
+
     elif loc[0] in grid.wumpusCoordinates :
         print(f'agent {agent.id} located at {agent.locatedAt} was eaten by Wumpus')
         agent.alive = False
