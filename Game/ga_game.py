@@ -3,6 +3,7 @@ from Game.Game import game
 from random import sample, randrange, random, choice
 from Agent.agentObjet import agentobject
 import matplotlib.pyplot as plt
+from statistics import mean
 
 class ga_game:
     def __init__(self, n_generations, n_agents, crossover_rate, mutation_rate):
@@ -17,6 +18,7 @@ class ga_game:
     def run(self):
         agent_population = self.gameRun.agents
         best_fitness = []
+        avg_fitness = []
         # how many brand new chromosomes, vs take over from prev gen gives cross_count
         self.cross_count = int(len(agent_population) * self.crossover_rate)
         self.cross_count = self.cross_count if self.cross_count % 2 == 0 else self.cross_count + 1
@@ -34,13 +36,18 @@ class ga_game:
             best_fitness.append(current_gen_sorted[0].fitness)
             # reproduce, select, crossover, mutate
             agent_population = self.reproduce(current_gen_sorted, i)
+            fitnessList = []
             for i in range(len(agent_population)):
+                fitnessList.append(current_gen_sorted[i].fitness)
                 agent_population[i].initParameters(i)
+            avg_fitness.append(mean(fitnessList))
             # this gets new population
             self.reset_game(agent_population)
-        plt.plot(best_fitness)
+        plt.plot(best_fitness, label="best fitness")
+        plt.plot(avg_fitness, label="avg fitness")
         plt.xlabel('Generation number')
         plt.ylabel('Highest fitness')
+        plt.legend(loc="upper right")
         plt.title('Fitness progression over generations')
         plt.show()
 
