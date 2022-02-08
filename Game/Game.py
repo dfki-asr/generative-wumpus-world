@@ -1,7 +1,7 @@
 from Actions.directionMappings import directions
 from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
-
+import numpy as np
 
 def updateStatus(agent, grid, statusString):  # check if agent alive/dead and assign fitness scores
     loc = agent.locatedAt
@@ -81,6 +81,7 @@ class game():
                 turnFirst, action, direction = self.agents[i].act(perc)
                 self.statusString += ""
 
+                self.agents[i].facing = np.dot(turnFirst, self.agents[i].facing)
                 if action == 'move':
                     self.agents[i].move(direction, self.cave)
                     self.statusString = f'Agent {self.agents[i].id} move {direction},  '
