@@ -34,6 +34,10 @@ class agentobject:
         self.action_generator = (act for act in self.chromList)
         self.locatedAt = self.getRandomCoordinates(grid)
         self.facing =  choice(list(directions.values()))
+        self.neighbors = self.grid.grid.neighboursOf(self.locatedAt)
+        print(f'neighbors of agent are {self.neighbors}')
+        for i in range(len(self.neighbors)):
+            print(f'perceptions of neighbors {self.neighbors[i]} are {self.grid.grid.get_perc([self.neighbors[i]])}')
 
         # print(f'AGENT FACING: {list(directions.keys())[list(directions.values()).index(self.facing)]}')
 
