@@ -69,6 +69,19 @@ class agentobject:
     def act(self, perception):        # choose a random action from chromosome list
         perc_based_actions = [item for item in self.chromList if item[0] == perception] if len(perception) > 0 else None
 
+    def perceive(self, grid):   # check for perceptions and add to knownPhenomena if not already there
+        loc = self.locatedAt
+        perceptions = []
+        perc = grid.grid.get_perc(loc)
+        if len(perc) > 0 :
+            perceptions.append((np.array([[1,0],[0,1]]),perc))
+        neighbors = grid.grid.neighboursOf(loc)
+        for n in neighbors:
+            perc = grid.grid.get_perc([n])
+            if len(perc) > 0:
+                direction = self.getDirectionOfPerception(n)
+                perceptions.append((direction, perc))
+        return perceptions
         if len(perception) == 0 or not perc_based_actions:
 
     def getDirectionOfPerception(self, cell):
