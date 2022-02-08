@@ -92,14 +92,15 @@ class agentobject:
     def act(self, perceptions):
         # print("PERCPTIONS :", perceptions)
         if len(perceptions) == 0:
-            drct = np.array([[1,0],[0,1]])
+            turn = np.array([[1,0],[0,1]])
             action = choice(['F','B','L','R'])
         else:
-            drct, phen = choice(perceptions) ## random choice now :\ we have to decide for something better here
+            turn, phen = choice(perceptions) ## random choice now :\ we have to decide for something better here
             # print("Reacting to phenomenon", phen, " in direction ", drct)
             perc_based_actions = [a for p,a in self.chromList if p == phen]
             action = choice(perc_based_actions) if len(perc_based_actions) > 0 else choice(['F','B','L','R'])
-        return drct, tab_of_act[action]
+        direction, action = tab_of_act[action]
+        return turn, direction, action
 
 
     def random_move(self, grid):    # move randomly
