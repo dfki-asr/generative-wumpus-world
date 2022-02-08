@@ -70,6 +70,15 @@ class agentobject:
         perc_based_actions = [item for item in self.chromList if item[0] == perception] if len(perception) > 0 else None
 
         if len(perception) == 0 or not perc_based_actions:
+
+    def getDirectionOfPerception(self, cell):
+        if cell == self.locatedAt[0] :
+            rotM = np.array([[1,0],[0,1]]) # identity matrix; no adaption needed if reacting to same cell
+        else:
+            from_to = np.subtract(cell, self.locatedAt[0])
+            rotM = rotationMatrixByVec(self.facing, from_to)
+        return rotM
+
             action = choice(['F','B','L','R'])
 
         else:
