@@ -114,3 +114,10 @@ def rotationMatrix(angle):
     a11 = np.cos(angle * (np.pi / 180))
     a12 = np.sin(angle * (np.pi / 180))
     return np.array([[a11, -a12], [a12, a11]]).astype(np.int)
+
+def rotationMatrixByVec(a, b):
+    a11 = a[0]*a[1] + b[0]*b[1]
+    a12 = a[1]*b[0] - a[0]*b[1]
+    a21 = a[0]*b[1] - a[1]*b[0]
+    a22 = a11
+    return np.array([[a11, a12], [a21, a22]]).astype(np.int)
