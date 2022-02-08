@@ -66,8 +66,6 @@ class agentobject:
                 temp = randrange(grid.grid.dimensions), randrange(grid.grid.dimensions)
         return [temp]
 
-    def act(self, perception):        # choose a random action from chromosome list
-        perc_based_actions = [item for item in self.chromList if item[0] == perception] if len(perception) > 0 else None
 
     def perceive(self, grid):   # check for perceptions and add to knownPhenomena if not already there
         loc = self.locatedAt
@@ -82,7 +80,6 @@ class agentobject:
                 direction = self.getDirectionOfPerception(n)
                 perceptions.append((direction, perc))
         return perceptions
-        if len(perception) == 0 or not perc_based_actions:
 
     def getDirectionOfPerception(self, cell):
         if cell == self.locatedAt[0] :
@@ -92,12 +89,17 @@ class agentobject:
             rotM = rotationMatrixByVec(self.facing, from_to)
         return rotM
 
+    def act(self, perceptions):
+        # print("PERCPTIONS :", perceptions)
+        if len(perceptions) == 0:
+            drct = np.array([[1,0],[0,1]])
             action = choice(['F','B','L','R'])
-
         else:
-            obs, action = choice(perc_based_actions)
-
-        return tab_of_act[action]
+            drct, phen = choice(perceptions) ## random choice now :\ we have to decide for something better here
+            # print("Reacting to phenomenon", phen, " in direction ", drct)
+            perc_based_actions = [a for p,a in self.chromList if p == phen]
+            action = choice(perc_based_actions) if len(perc_based_actions) > 0 else choice(['F','B','L','R'])
+        return drct, tab_of_act[action]
 
 
     def random_move(self, grid):    # move randomly
