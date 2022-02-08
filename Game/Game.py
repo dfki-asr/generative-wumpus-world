@@ -77,7 +77,7 @@ class game():
             for i in range(len(self.agents)):
                 self.statusString = ""
                 # print(f'agent {i} located at {agents[i].locatedAt}')
-                perc = perceive(self.agents[i], self.cave, i)
+                perc = self.agents[i].perceive(self.cave)
                 action, direction = self.agents[i].act(perc)
                 self.statusString += ""
 
