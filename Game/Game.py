@@ -81,7 +81,7 @@ class game():
                 turnFirst, action, direction = self.agents[i].act(perc)
                 self.statusString += ""
 
-                self.agents[i].facing = np.dot(turnFirst, self.agents[i].facing)
+                self.agents[i].facing = turnFirst
                 if action == 'move':
                     self.agents[i].move(direction, self.cave)
                     self.statusString = f'Agent {self.agents[i].id} move {direction},  '

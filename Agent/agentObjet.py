@@ -72,27 +72,18 @@ class agentobject:
         perceptions = []
         perc = grid.grid.get_perc(loc)
         if len(perc) > 0 :
-            perceptions.append((np.array([[1,0],[0,1]]),perc))
+            perceptions.append((self.facing,perc))
         neighbors = grid.grid.neighboursOf(loc)
         for n in neighbors:
             perc = grid.grid.get_perc([n])
             if len(perc) > 0:
-                direction = self.getDirectionOfPerception(n)
+                direction = tuple(np.subtract(n, self.locatedAt[0]))
                 perceptions.append((direction, perc))
         return perceptions
 
-    def getDirectionOfPerception(self, cell):
-        if cell == self.locatedAt[0] :
-            rotM = np.array([[1,0],[0,1]]) # identity matrix; no adaption needed if reacting to same cell
-        else:
-            from_to = np.subtract(cell, self.locatedAt[0])
-            rotM = rotationMatrixByVec(self.facing, from_to)
-        return rotM
-
     def act(self, perceptions):
-        # print("PERCPTIONS :", perceptions)
         if len(perceptions) == 0:
-            turn = np.array([[1,0],[0,1]])
+            turn = self.facing
             action = choice(['F','B','L','R'])
         else:
             turn, phen = choice(perceptions) ## random choice now :\ we have to decide for something better here
@@ -140,9 +131,3 @@ def rotationMatrix(angle):
     a12 = np.sin(angle * (np.pi / 180))
     return np.array([[a11, -a12], [a12, a11]]).astype(np.int)
 
-def rotationMatrixByVec(a, b):
-    a11 = a[0]*a[1] + b[0]*b[1]
-    a12 = a[1]*b[0] - a[0]*b[1]
-    a21 = a[0]*b[1] - a[1]*b[0]
-    a22 = a11
-    return np.array([[a11, a12], [a21, a22]]).astype(np.int)
