@@ -2,15 +2,6 @@ from Actions.directionMappings import directions
 from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
 
-def perceive(agent, grid, agent_id):   # check for perceptions and add to knownPhenomena if not already there
-    loc = agent.locatedAt
-    perc = grid.grid.get_perc(loc)
-    if len(perc) > 0:
-        if perc not in agent.knownPhenomena:
-            agent.knownPhenomena = list(set().union(agent.knownPhenomena, perc.split("+")))
-            # print(f'At {loc}, there is a {perc} perception for agent {agent_id}')
-    return perc
-
 
 def updateStatus(agent, grid, statusString):  # check if agent alive/dead and assign fitness scores
     loc = agent.locatedAt
