@@ -78,7 +78,7 @@ class game():
                 self.statusString = ""
                 # print(f'agent {i} located at {agents[i].locatedAt}')
                 perc = self.agents[i].perceive(self.cave)
-                action, direction = self.agents[i].act(perc)
+                turnFirst, action, direction = self.agents[i].act(perc)
                 self.statusString += ""
 
                 if action == 'move':
