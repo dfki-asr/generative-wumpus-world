@@ -40,7 +40,6 @@ class ga_game:
             fitnessList = []
             for i in range(len(agent_population)):
                 fitnessList.append(current_gen_sorted[i].fitness)
-                agent_population[i].initParameters(i)
             avg_fitness.append(mean(fitnessList))
             # this gets new population
             self.reset_game(agent_population)
@@ -65,7 +64,7 @@ class ga_game:
         new_pop: list = self.crossover(mating_pool, generation)
         self.mutate(new_pop)
         for i in range(len(population) - self.cross_count):
-            new_pop.append(population[i])
+            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=population[i].chromList, phenomena=population[i].knownPhenomena, count=self.cross_count+i))
         return new_pop
 
     def selection(self, population):
@@ -78,13 +77,13 @@ class ga_game:
     def crossover(self, mating_pool, generation):
         new_pop = []
         # loop over for (cross_count/2) times, choosing two parents each time
-        for _ in range(0, self.cross_count, 2):
+        for i in range(0, self.cross_count, 2):
             indv1 = mating_pool[randrange(self.cross_count)]
             indv2 = mating_pool[randrange(self.cross_count)]
             chrom1, chrom2 = self.onepointcrossover(indv1.chromList, indv2.chromList)
             phenomena = list(set().union(indv1.knownPhenomena, indv2.knownPhenomena))
-            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom1, phenomena=phenomena))
-            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom2, phenomena=phenomena))
+            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom1, phenomena=phenomena, count=i))
+            new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom2, phenomena=phenomena, count=i+1))
         return new_pop
 
     def mutate(self, population):
