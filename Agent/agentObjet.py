@@ -81,15 +81,36 @@ class agentobject:
                 perceptions.append((direction, perc))
         return perceptions
 
-    def act(self, perceptions):
+    ## ((1,0),b), ((0,-1),b) <-- perceptions
+    ## (g, P), (s, f), (b, F), (b, L) <-- chromList
+
+    def act(self, perceptions): ## act prio by perc (one action per chromosome pair)
+        perc_based_actions = []
+        turn = self.facing
+        if len(perceptions) == 0:
+            action = choice(['F','B','L','R'])
+        else:
+            matches = []
+            for p , a in self.chromList :
+              matches = [(d, phen) for d, phen in perceptions if p == phen]
+              if len(matches) > 0 :
+                  turn, phen = choice(matches) ## random choice now :\ we have to decide for something better here
+                  perc_based_actions = [a for p,a in self.chromList if p == phen]
+                  break ## for first matching perception
+        action = choice(perc_based_actions) if len(perc_based_actions) > 0 else choice(['F','B','L','R'])
+        direction, action = tab_of_act[action]
+        return turn, direction, action
+
+    ## Another option to try with different chromosome model
+    def act_prio_by_action(self, perceptions):
         if len(perceptions) == 0:
             turn = self.facing
             action = choice(['F','B','L','R'])
         else:
             turn, phen = choice(perceptions) ## random choice now :\ we have to decide for something better here
             # print("Reacting to phenomenon", phen, " in direction ", drct)
-            perc_based_actions = [a for p,a in self.chromList if p == phen]
-            action = choice(perc_based_actions) if len(perc_based_actions) > 0 else choice(['F','B','L','R'])
+            perc_based_actions = [a for p, a in self.chromList if p == phen]  ## e.g. returns [('F','P')] for chrom element ('f', ('F','P'))
+            action = perc_based_actions[0][0] ## should in example above return F as prioritized reaction and ignore the rest
         direction, action = tab_of_act[action]
         return turn, direction, action
 
