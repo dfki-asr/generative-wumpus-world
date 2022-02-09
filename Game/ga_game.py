@@ -1,3 +1,4 @@
+from Actions.actionMappings import tab_of_act
 from Actions.directionMappings import directions
 from Game.Game import game
 from random import sample, randrange, random, choice
@@ -65,17 +66,13 @@ class ga_game:
         self.mutate(new_pop)
         for i in range(len(population) - self.cross_count):
             new_pop.append(population[i])
-
         return new_pop
 
     def selection(self, population):
-        num = 3
         mating_pool = []
-        for _ in range(self.cross_count):
-            rand_sel = sample(population, num)  # randomly take "num" samples from population list
-            rand_sel.sort(key=lambda pop: pop.fitness, reverse=True)  # sort the random selection (desc)
-            winner = rand_sel[0]  # choose rand sel with highest fitness as the winner
-            mating_pool.append(winner)  # add it to mating pool
+        for _ in range(0, self.cross_count, 2):
+            mating_pool.append(population[0])
+            mating_pool.append(population[1])
         return mating_pool
 
     def crossover(self, mating_pool, generation):
@@ -105,7 +102,7 @@ class ga_game:
             index = randrange(size)
             (perc, react) = indiv.chromList[index]
             if (perc, react) != ('g','P') : # Agents should never forget that
-                indiv.chromList[index] = ( choice(indiv.knownPhenomena) , indiv.chromList[index][1])
+                indiv.chromList[index] = ( indiv.chromList[index][0] , choice(list(tab_of_act)))
 
 
     def swapmutation(self, indiv):
