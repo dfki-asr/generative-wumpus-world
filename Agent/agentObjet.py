@@ -1,4 +1,5 @@
 from random import choice, randrange
+import random
 from Actions.actionMappings import tab_of_act
 from Environment.gridSetup import gridSetup
 from Actions.directionMappings import directions, angles
@@ -60,12 +61,12 @@ class agentobject:
         return chrom_list
 
     def getRandomCoordinates(self, grid):
+        random.seed(self.id)
         temp = (0,0)
         while temp in grid.pitCoordinates or temp in grid.wumpusCoordinates or temp in grid.goldCoordinate or temp == (
                 0, 0):
                 temp = randrange(grid.grid.dimensions), randrange(grid.grid.dimensions)
         return [temp]
-
 
     def perceive(self, grid):   # check for perceptions and add to knownPhenomena if not already there
         loc = self.locatedAt
