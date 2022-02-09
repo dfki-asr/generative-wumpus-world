@@ -8,14 +8,13 @@ def updateStatus(agent, grid, statusString):  # check if agent alive/dead and as
     # print(f'location {loc} p {grid.pitCoordinates} s {grid.stenchCoord}')
     if loc[0] in grid.goldCoordinate:
         if agent.gotGold:
-            statusString += f'agent {agent.id} won game, has fitness {agent.fitness}, exiting, '
+            print(f'agent {agent.id} won game, has fitness {agent.fitness}, exiting')
             agent.alive = False
         else:
-            statusString += f'agent {agent.id} could find gold, '
+            print(f'agent {agent.id} could find gold')
             agent.fitness += 20
         if agent.fatigue <= 0:
             agent.alive = False
-        return 0
 
     if agent.fatigue <= 0 :
         statusString += f'agent {agent.id} located at {agent.locatedAt} starved to death, '
