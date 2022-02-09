@@ -1,16 +1,7 @@
 from Actions.directionMappings import directions
 from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
-
-def perceive(agent, grid, agent_id):   # check for perceptions and add to knownPhenomena if not already there
-    loc = agent.locatedAt
-    perc = grid.grid.get_perc(loc)
-    if len(perc) > 0:
-        if perc not in agent.knownPhenomena:
-            agent.knownPhenomena = list(set().union(agent.knownPhenomena, perc.split("+")))
-            # print(f'At {loc}, there is a {perc} perception for agent {agent_id}')
-    return perc
-
+import numpy as np
 
 def updateStatus(agent, grid, statusString):  # check if agent alive/dead and assign fitness scores
     loc = agent.locatedAt
@@ -86,10 +77,11 @@ class game():
             for i in range(len(self.agents)):
                 self.statusString = ""
                 # print(f'agent {i} located at {agents[i].locatedAt}')
-                perc = perceive(self.agents[i], self.cave, i)
-                action, direction = self.agents[i].act(perc)
+                perc = self.agents[i].perceive(self.cave)
+                turnFirst, action, direction = self.agents[i].act(perc)
                 self.statusString += ""
 
+                self.agents[i].facing = turnFirst
                 if action == 'move':
                     self.agents[i].move(direction, self.cave)
                     self.statusString = f'Agent {self.agents[i].id} move {direction},  '

@@ -22,7 +22,7 @@ class agentobject:
         self.generation = 0
         self.fitness = 0
         self.rules = []
-        self.knownPhenomena = phenomena if phenomena else ["g"]
+        self.knownPhenomena = phenomena if phenomena else ["g", "b", "s"]
         self.currentObservations = []
         self.chromList = chromosome if chromosome else self.initChromosome()
         self.wonGame = False
@@ -34,12 +34,7 @@ class agentobject:
         self.action_generator = (act for act in self.chromList)
         self.locatedAt = self.getRandomCoordinates(grid)
         self.facing =  choice(list(directions.values()))
-        self.neighbors = self.grid.grid.neighboursOf(self.locatedAt)
-        print(f'neighbors of agent are {self.neighbors}')
-        for i in range(len(self.neighbors)):
-            print(f'perceptions of neighbors {self.neighbors[i]} are {self.grid.grid.get_perc([self.neighbors[i]])}')
 
-        # print(f'AGENT FACING: {list(directions.keys())[list(directions.values()).index(self.facing)]}')
 
     def initParameters(self, count):
         self.size_limit = 10
@@ -71,16 +66,53 @@ class agentobject:
                 temp = randrange(grid.grid.dimensions), randrange(grid.grid.dimensions)
         return [temp]
 
-    def act(self, perception):        # choose a random action from chromosome list
-        perc_based_actions = [item for item in self.chromList if item[0] == perception] if len(perception) > 0 else None
 
-        if len(perception) == 0 or not perc_based_actions:
+    def perceive(self, grid):   # check for perceptions and add to knownPhenomena if not already there
+        loc = self.locatedAt
+        perceptions = []
+        perc = grid.grid.get_perc(loc)
+        if len(perc) > 0 :
+            perceptions.append((self.facing,perc))
+        neighbors = grid.grid.neighboursOf(loc)
+        for n in neighbors:
+            perc = grid.grid.get_perc([n])
+            if len(perc) > 0:
+                direction = tuple(np.subtract(n, self.locatedAt[0]))
+                perceptions.append((direction, perc))
+        return perceptions
+
+    ## ((1,0),b), ((0,-1),b) <-- perceptions
+    ## (g, P), (s, f), (b, F), (b, L) <-- chromList
+
+    def act(self, perceptions): ## act prio by perc (one action per chromosome pair)
+        perc_based_actions = []
+        turn = self.facing
+        if len(perceptions) == 0:
             action = choice(['F','B','L','R'])
-
         else:
-            obs, action = choice(perc_based_actions)
+            matches = []
+            for p , a in self.chromList :
+              matches = [(d, phen) for d, phen in perceptions if p == phen]
+              if len(matches) > 0 :
+                  turn, phen = choice(matches) ## random choice now :\ we have to decide for something better here
+                  perc_based_actions = [a for p,a in self.chromList if p == phen]
+                  break ## for first matching perception
+        action = choice(perc_based_actions) if len(perc_based_actions) > 0 else choice(['F','B','L','R'])
+        direction, action = tab_of_act[action]
+        return turn, direction, action
 
-        return tab_of_act[action]
+    ## Another option to try with different chromosome model
+    def act_prio_by_action(self, perceptions):
+        if len(perceptions) == 0:
+            turn = self.facing
+            action = choice(['F','B','L','R'])
+        else:
+            turn, phen = choice(perceptions) ## random choice now :\ we have to decide for something better here
+            # print("Reacting to phenomenon", phen, " in direction ", drct)
+            perc_based_actions = [a for p, a in self.chromList if p == phen]  ## e.g. returns [('F','P')] for chrom element ('f', ('F','P'))
+            action = perc_based_actions[0][0] ## should in example above return F as prioritized reaction and ignore the rest
+        direction, action = tab_of_act[action]
+        return turn, direction, action
 
 
     def random_move(self, grid):    # move randomly
@@ -119,3 +151,4 @@ def rotationMatrix(angle):
     a11 = np.cos(angle * (np.pi / 180))
     a12 = np.sin(angle * (np.pi / 180))
     return np.array([[a11, -a12], [a12, a11]]).astype(np.int)
+
