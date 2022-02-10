@@ -25,7 +25,7 @@ class agentobject:
         self.rules = []
         self.knownPhenomena = phenomena if phenomena else ["g", "b", "s"]
         self.currentObservations = []
-        self.chromList = chromosome if chromosome else self.initChromosome_binnedActionLists()
+        self.chromList = chromosome if chromosome else self.initChromosome() ## alternatively: self.initChromosome_binnedActionLists()
         self.wonGame = False
         self.alive = True
         self.arrow = True
@@ -90,7 +90,7 @@ class agentobject:
     ## ((1,0),b), ((0,-1),b) <-- perceptions
     ## (g, P), (s, f), (b, F), (b, L) <-- chromList
 
-    def act_prio_by_perception(self, perceptions): ## act prio by perc (one action per chromosome pair)
+    def act(self, perceptions): ## act prio by perc (one action per chromosome pair)
         perc_based_actions = []
         turn = self.facing
         if len(perceptions) == 0:
@@ -108,7 +108,7 @@ class agentobject:
         return turn, direction, action
 
     ## Another option to try with different chromosome model
-    def act(self, perceptions):
+    def act_binnedActionList(self, perceptions): ## use this one if using binned action lists chromosome model
         if len(perceptions) == 0:
             turn = self.facing
             action = choice(['F','B','L','R'])

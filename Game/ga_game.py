@@ -82,7 +82,7 @@ class ga_game:
                 indv1 = mating_pool[randrange(self.top_mates)]
                 indv2 = mating_pool[randrange(self.top_mates)]
                 if indv1 != indv2 : break
-            chrom1, chrom2 = self.onepointcrossover_binned_actions(indv1.chromList, indv2.chromList)
+            chrom1, chrom2 = self.onepointcrossover(indv1.chromList, indv2.chromList) ## use self.onepointcrossover_binned_actions for binned action chromosome model
             phenomena = list(set().union(indv1.knownPhenomena, indv2.knownPhenomena))
             new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom1, phenomena=phenomena, count=i))
             new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom2, phenomena=phenomena, count=i+1))
@@ -93,8 +93,8 @@ class ga_game:
             mutate = random() < self.mutation_rate
 
             if mutate:
-                self.swap_binnedActions(indiv)
-                self.flip_binnedActions(indiv)
+              self.swapmutation(indiv) ## use self.swap_binnedActions(indiv) for binned action list chromosome model
+              self.flipmutation(indiv) ## use self.flip_binnedActions(indiv) fpr binned action list chromosome model
 
     def flipmutation(self, indiv):
         numFlipped = randrange(self.flip_max)
