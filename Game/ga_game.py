@@ -13,7 +13,7 @@ class ga_game:
         self.crossover_rate = crossover_rate
         self.cross_count = 0
         self.mutation_rate = mutation_rate
-        self.flip_max = 5 # max number of chromosome elements that get flipped
+        self.flip_max = 2 # max number of chromosome elements that get flipped
                           # during flip mutation
 
     def run(self):
@@ -80,7 +80,7 @@ class ga_game:
         for i in range(0, self.cross_count, 2):
             indv1 = mating_pool[randrange(self.cross_count)]
             indv2 = mating_pool[randrange(self.cross_count)]
-            chrom1, chrom2 = self.onepointcrossover(indv1.chromList, indv2.chromList)
+            chrom1, chrom2 = self.onepointcrossover_binned_actions(indv1.chromList, indv2.chromList)
             phenomena = list(set().union(indv1.knownPhenomena, indv2.knownPhenomena))
             new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom1, phenomena=phenomena, count=i))
             new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom2, phenomena=phenomena, count=i+1))
@@ -91,11 +91,11 @@ class ga_game:
             mutate = random() < self.mutation_rate
 
             if mutate:
-                self.swapmutation(indiv)
-                self.flipmutation(indiv)
+                self.swap_binnedActions(indiv)
+                self.flip_binnedActions(indiv)
 
     def flipmutation(self, indiv):
-        numFlipped = randrange(self.flip_max) + 1
+        numFlipped = randrange(self.flip_max)
         size = len(indiv.chromList)
         for _ in range(numFlipped):
             index = randrange(size)
@@ -103,16 +103,51 @@ class ga_game:
             if (perc, react) != ('g','P') : # Agents should never forget that
                 indiv.chromList[index] = ( indiv.chromList[index][0] , choice(list(tab_of_act)))
 
+    def flip_binnedActions(self, indiv):
+        numFlipped = randrange(self.flip_max)
+        if numFlipped == 0: return
+
+        for _ in range(numFlipped):
+            rule = choice(indiv.chromList)
+            flipIndex = randrange(len(rule[1]))
+            flipTo = choice(list(tab_of_act.keys()))
+            rule[1][flipIndex] = flipTo
 
     def swapmutation(self, indiv):
         n1, n2 = randrange(len(indiv.chromList)) , randrange(len(indiv.chromList))
         indiv.chromList[n1] , indiv.chromList[n2] = indiv.chromList[n2] , indiv.chromList[n1]
+
+    def swap_binnedActions(self, indiv):
+        for i, c in enumerate(indiv.chromList) :
+            actions = c[1]
+            l = len(actions)
+            n1 = 0
+            n2 = 0
+            while n1 == n2:
+                n1 = randrange(l)
+                n2 = randrange(l)
+            actions[n1], actions[n2] = actions[n2], actions[n1]
+
 
     def onepointcrossover(self, seq1:list, seq2:list):
         p_seq1 = randrange(len(seq1))
 
         seq12 = seq1[:p_seq1] + seq2[p_seq1:]
         seq21 = seq2[:p_seq1] + seq1[p_seq1:]
+
+        return (seq12, seq21)
+
+
+    def onepointcrossover_binned_actions(self, seq1:list, seq2:list):
+        seq12 = []
+        seq12.append(seq1[0])
+        seq12.append(seq2[1])
+        seq12.append(seq1[2])
+
+        seq21 = []
+        seq21.append(seq2[0])
+        seq21.append(seq1[1])
+        seq21.append(seq2[2])
 
         return (seq12, seq21)
 
