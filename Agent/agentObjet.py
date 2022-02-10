@@ -60,6 +60,13 @@ class agentobject:
             i += 1
         return chrom_list
 
+    def initChromosome_binnedActionLists(self):
+        chrom_list = []
+        actions = sorted(tab_of_act.keys())
+        for p in self.knownPhenomena:
+            chrom_list.append((p, random.sample(actions, self.size_limit)))
+        return chrom_list
+
     def getRandomCoordinates(self, grid):
         random.seed(self.id)
         temp = (0,0)
