@@ -18,14 +18,14 @@ def isValidDirection(grid, position):
 class agentobject:
     def __init__(self, grid: gridSetup, chromosome = None, phenomena = None, count=0):
         self.grid = grid
-        self.size_limit = 10
+        self.size_limit = 5
         self.fatigue = 40
         self.generation = 0
         self.fitness = 0
         self.rules = []
         self.knownPhenomena = phenomena if phenomena else ["g", "b", "s"]
         self.currentObservations = []
-        self.chromList = chromosome if chromosome else self.initChromosome()
+        self.chromList = chromosome if chromosome else self.initChromosome_binnedActionLists()
         self.wonGame = False
         self.alive = True
         self.arrow = True
@@ -35,7 +35,6 @@ class agentobject:
         self.action_generator = (act for act in self.chromList)
         self.locatedAt = self.getRandomCoordinates(grid)
         self.facing =  choice(list(directions.values()))
-
 
     def initParameters(self, count):
         self.size_limit = 10
@@ -68,7 +67,6 @@ class agentobject:
         return chrom_list
 
     def getRandomCoordinates(self, grid):
-        random.seed(self.id)
         temp = (0,0)
         while temp in grid.pitCoordinates or temp in grid.wumpusCoordinates or temp in grid.goldCoordinate or temp == (
                 0, 0):
@@ -92,7 +90,7 @@ class agentobject:
     ## ((1,0),b), ((0,-1),b) <-- perceptions
     ## (g, P), (s, f), (b, F), (b, L) <-- chromList
 
-    def act(self, perceptions): ## act prio by perc (one action per chromosome pair)
+    def act_prio_by_perception(self, perceptions): ## act prio by perc (one action per chromosome pair)
         perc_based_actions = []
         turn = self.facing
         if len(perceptions) == 0:
@@ -110,7 +108,7 @@ class agentobject:
         return turn, direction, action
 
     ## Another option to try with different chromosome model
-    def act_prio_by_action(self, perceptions):
+    def act(self, perceptions):
         if len(perceptions) == 0:
             turn = self.facing
             action = choice(['F','B','L','R'])
@@ -118,7 +116,7 @@ class agentobject:
             turn, phen = choice(perceptions) ## random choice now :\ we have to decide for something better here
             # print("Reacting to phenomenon", phen, " in direction ", drct)
             perc_based_actions = [a for p, a in self.chromList if p == phen]  ## e.g. returns [('F','P')] for chrom element ('f', ('F','P'))
-            action = perc_based_actions[0][0] ## should in example above return F as prioritized reaction and ignore the rest
+            action = perc_based_actions[0][0] if len(perc_based_actions) > 0 else choice(['F','B','L','R'])  ## should in example above return F as prioritized reaction and ignore the rest
         direction, action = tab_of_act[action]
         return turn, direction, action
 
