@@ -13,6 +13,7 @@ class ga_game:
         self.crossover_rate = crossover_rate
         self.cross_count = 0
         self.mutation_rate = mutation_rate
+        self.top_mates = 2
         self.flip_max = 2 # max number of chromosome elements that get flipped
                           # during flip mutation
 
@@ -69,17 +70,18 @@ class ga_game:
 
     def selection(self, population):
         mating_pool = []
-        for _ in range(0, self.cross_count, 2):
-            mating_pool.append(population[0])
-            mating_pool.append(population[1])
+        for i in range(self.top_mates):
+            mating_pool.append(population[i])
         return mating_pool
 
     def crossover(self, mating_pool, generation):
         new_pop = []
         # loop over for (cross_count/2) times, choosing two parents each time
         for i in range(0, self.cross_count, 2):
-            indv1 = mating_pool[randrange(self.cross_count)]
-            indv2 = mating_pool[randrange(self.cross_count)]
+            while True:
+                indv1 = mating_pool[randrange(self.top_mates)]
+                indv2 = mating_pool[randrange(self.top_mates)]
+                if indv1 != indv2 : break
             chrom1, chrom2 = self.onepointcrossover_binned_actions(indv1.chromList, indv2.chromList)
             phenomena = list(set().union(indv1.knownPhenomena, indv2.knownPhenomena))
             new_pop.append(agentobject(grid=self.gameRun.cave, chromosome=chrom1, phenomena=phenomena, count=i))
