@@ -103,10 +103,31 @@ class ga_game:
             if (perc, react) != ('g','P') : # Agents should never forget that
                 indiv.chromList[index] = ( indiv.chromList[index][0] , choice(list(tab_of_act)))
 
+    def flip_binnedActions(self, indiv):
+        numFlipped = randrange(self.flip_max)
+        if numFlipped == 0: return
+
+        for _ in range(numFlipped):
+            rule = choice(indiv.chromList)
+            flipIndex = randrange(len(rule[1]))
+            flipTo = choice(list(tab_of_act.keys()))
+            rule[1][flipIndex] = flipTo
 
     def swapmutation(self, indiv):
         n1, n2 = randrange(len(indiv.chromList)) , randrange(len(indiv.chromList))
         indiv.chromList[n1] , indiv.chromList[n2] = indiv.chromList[n2] , indiv.chromList[n1]
+
+    def swap_binnedActions(self, indiv):
+        for i, c in enumerate(indiv.chromList) :
+            actions = c[1]
+            l = len(actions)
+            n1 = 0
+            n2 = 0
+            while n1 == n2:
+                n1 = randrange(l)
+                n2 = randrange(l)
+            actions[n1], actions[n2] = actions[n2], actions[n1]
+
 
     def onepointcrossover(self, seq1:list, seq2:list):
         p_seq1 = randrange(len(seq1))
