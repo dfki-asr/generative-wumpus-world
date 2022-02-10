@@ -137,6 +137,20 @@ class ga_game:
 
         return (seq12, seq21)
 
+
+    def onepointcrossover_binned_actions(self, seq1:list, seq2:list):
+        seq12 = []
+        seq12.append(seq1[0])
+        seq12.append(seq2[1])
+        seq12.append(seq1[2])
+
+        seq21 = []
+        seq21.append(seq2[0])
+        seq21.append(seq1[1])
+        seq21.append(seq2[2])
+
+        return (seq12, seq21)
+
     def reset_game(self, agents):
         self.gameRun.removeDeadAgents()
         self.gameRun.graveyard = []
