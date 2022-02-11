@@ -54,7 +54,7 @@ class Grid:
                     ret_vals.append((j, i))
         return ret_vals
 
-    def get_coord_and_remove_val(self, value):
+    def remov_value_from_grid(self, value):
         for i in range(self.dimensions):
             for j in range(self.dimensions):
                 cell = self.grid[i][j]

@@ -41,7 +41,7 @@ class gridSetup():
         return temp_list
 
     def updateAgentCoordinates(self, agents:list, newGen):
-        self.grid.get_coord_and_remove_val('A') # remove previous locations of agents from grid
+        self.grid.remov_value_from_grid('A') # remove previous locations of agents from grid
         # print(f'previous coordinates are {old}')
         for agent in agents:
              if agent.alive:
