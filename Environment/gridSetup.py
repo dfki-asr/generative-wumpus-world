@@ -45,20 +45,14 @@ class gridSetup():
         # print(f'previous coordinates are {old}')
         if newGen:                     # if there no agents are in the grid, i.e at the beginning of the run
             for agent in agents:
-                self.grid.set_coord(agent.locatedAt, 'A')       # put agents on the grid
+                self.grid.set_coord(self.grid.grid, agent.locatedAt, 'A')       # put agents on the grid
         else:                                # after an iteration, where agents are populated at least once
-            for i,agent in enumerate(agents):      # loop to remove all previous positions of indiv. agents
+            for i,agent in enumerate(agents):      #remove all previous positions of indiv. agents
                 val = self.grid.grid[old[i][0]][old[i][1]]
-                # print(f'val at {old[i]} is {val}')
-                while 'A' in val:           # to remove multiple agents which may be in the same position
-                    if '+A' in val:
-                        val = val.replace('+A', '')
-                    elif 'A' in val:        # to romove agent when it is the only entity in that position
-                        val = val.replace('A', '')
-                self.grid.grid[old[i][0]][old[i][1]] = val  # previous contents of grid, after removing agents
+                val.remove('A')
             for agent in agents:
                  if agent.alive:
-                    self.grid.set_coord(agent.locatedAt, 'A')  # populate new agent locations on grid
+                    self.grid.set_coord(self.grid.grid, agent.locatedAt, 'A')  # populate new agent locations on grid
 
     def resetGrid(self, agent:list, newGen):
         self.grid = Grid(self.dimension)
