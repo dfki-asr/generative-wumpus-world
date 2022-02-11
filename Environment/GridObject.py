@@ -2,8 +2,8 @@ class Grid:
 
     def __init__(self, dimensions):
         self.dimensions = dimensions
-        self.grid = [[""] * dimensions for _ in range(dimensions)]
-        self.perceptions = [[""] * dimensions for _ in range(dimensions)]
+        self.grid = [[[] for _ in range(dimensions)] for _ in range(dimensions)]
+        self.perceptions = [[[] for _ in range(dimensions)] for _ in range(dimensions)]
 
     def __str__(self):
         gridstr = "-" * 80 + "\n|"
