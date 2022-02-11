@@ -78,13 +78,15 @@ class agentobject:
         perceptions = []
         perc = grid.grid.get_perc(loc)
         if len(perc) > 0 :
-            perceptions.append((self.facing,perc))
+            for p in perc:
+                perceptions.append((self.facing,p))
         neighbors = grid.grid.neighboursOf(loc)
         for n in neighbors:
             perc = grid.grid.get_perc([n])
             if len(perc) > 0:
                 direction = tuple(np.subtract(n, self.locatedAt[0]))
-                perceptions.append((direction, perc))
+                for p in perc:
+                    perceptions.append((direction, p))
         return perceptions
 
     ## ((1,0),b), ((0,-1),b) <-- perceptions
@@ -98,10 +100,10 @@ class agentobject:
         else:
             matches = []
             for p , a in self.chromList :
-              matches = [(d, phen) for d, phen in perceptions if p == phen]
+              matches = [(d, phen) for d, phen in perceptions if p == phen.phen]
               if len(matches) > 0 :
                   turn, phen = choice(matches) ## random choice now :\ we have to decide for something better here
-                  perc_based_actions = [a for p,a in self.chromList if p == phen]
+                  perc_based_actions = [a for p,a in self.chromList if p == phen.phen]
                   break ## for first matching perception
         action = choice(perc_based_actions) if len(perc_based_actions) > 0 else choice(['F','B','L','R'])
         direction, action = tab_of_act[action]
