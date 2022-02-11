@@ -28,21 +28,20 @@ class Grid:
 
         return gridstr
 
-    def set_coord(self, coord, value):
+    def set_coord(self, grid, coord, value):
         for coord_i in coord:
             x, y = coord_i
-            if self.grid[y][x] == "":
-                self.grid[y][x] += value
-            else:
-                self.grid[y][x] += ("+" + value)
+            if grid[y][x] == None:
+                grid[y][x] = []
+            grid[y][x].append(value)
 
-    def set_perc(self, coord, value):
+    def set_perception(self, grid, coord, value):
+        perc = Perception("grid", value, 1, 0, 0)
         for coord_i in coord:
             x, y = coord_i
-            if self.perceptions[y][x] == "":
-                self.perceptions[y][x] += value
-            else:
-                self.perceptions[y][x] += ("+" + value)
+            if grid[y][x] == None:
+                grid[y][x] = []
+            grid[y][x].append(perc)
 
     def get_perc(self, coord):
         for coord_i in coord:
