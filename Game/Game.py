@@ -19,6 +19,7 @@ class game():
         self.graveyard = []
         self.bestIndividual = None
         self.statusString = ""
+        self.loopIter = 0
 
     def initialize_agents(self):    # init agents and add them to grid
         agents = []
@@ -35,6 +36,7 @@ class game():
 
     def run_game(self):
         while(self.agents):
+            self.loopIter += 1
             for i in range(len(self.agents)):
                 self.statusString = ""
                 # print(f'agent {i} located at {agents[i].locatedAt}')
@@ -67,14 +69,9 @@ class game():
                         self.statusString += f'agent {i} found gold, '
                     self.agents[i].fatigue -= 1
                 self.updateStatus(self.agents[i], self.cave, self.statusString, action)
-                # print(f'After move, agent {self.agents[i].id} located at {self.agents[i].locatedAt}')
             print("\n")
-            # print(f'agent length after removing dead guys {len(self.agents)}')
             self.removeDeadAgents()
 
-            # print(self.cave.grid)
-        # for i,agent in enumerate(self.agents):
-        #     print(f'agent {i} has known phenomena: {agent.knownPhenomena}')
         for indiv in self.graveyard:
             print(f' overall: {indiv.fitness}, {indiv.chromList}')
         fitness_list = [indiv.fitness for indiv in self.graveyard]
@@ -126,11 +123,20 @@ class game():
             print("------------------")
             return
 
-        if action == 'move':
-            if agent.alive:
+        if action == 'move':  # if agent moves
+            if agent.alive:     # and remains alive after move
                 source = "agent" + str(agent.id)
-                self.cave.grid.set_perception(self.cave.grid.perceptions, source, agent.locatedAt, "m")
+                currentPerc = agent.perceive(self.cave)
+                if len(currentPerc)>0:  # add marker if the same agent has no marker in this location
+                    for d, phen in currentPerc:  # if this agent has not left
+                        if not phen.phen == 'm' and not phen.source == source:
+                            self.cave.grid.set_perception(self.cave.grid.perceptions, source, agent.locatedAt, "m",
+                                                          lvl=1, t=0,
+                                                          now=self.loopIter, dec=0.5)
 
+                else:  # if no markers in this location, directly add safe marker
+                    self.cave.grid.set_perception(self.cave.grid.perceptions, source, agent.locatedAt, "m", lvl=1, t=0,
+                                                  now=self.loopIter, dec=0.5)
         # if not agent.arrow:
         #     actions_left = [action[1] for action in agent.chromList]
         #     valid_actions = ['F', 'B', 'L', 'R']
