@@ -19,9 +19,9 @@ class gridSetup():
         self.breezeCoord = self.grid.neighboursOf(self.pitCoordinates)
         self.stenchCoord = self.grid.neighboursOf(self.wumpusCoordinates)
         self.glitterCoord = self.goldCoordinate
-        self.grid.set_perception(self.grid.perceptions,self.breezeCoord, 'b')
-        self.grid.set_perception(self.grid.perceptions, self.stenchCoord, 's')
-        self.grid.set_perception(self.grid.perceptions, self.glitterCoord, 'g')
+        self.grid.set_perception(self.grid.perceptions, "grid", self.breezeCoord, 'b')
+        self.grid.set_perception(self.grid.perceptions, "grid", self.stenchCoord, 's')
+        self.grid.set_perception(self.grid.perceptions, "grid", self.glitterCoord, 'g')
 
 
     def getRandomCoordinates(self, dimension, num):
@@ -52,7 +52,7 @@ class gridSetup():
         self.grid.set_coord(self.grid.grid, self.wumpusCoordinates, 'W')
         self.grid.set_coord(self.grid.grid,self.pitCoordinates, 'P')
         self.grid.set_coord(self.grid.grid, self.goldCoordinate, 'G')
-        self.grid.set_perception(self.grid.perceptions, self.breezeCoord, 'b')
-        self.grid.set_perception(self.grid.perceptions, self.stenchCoord, 's')
-        self.grid.set_perception(self.grid.perceptions, self.glitterCoord, 'g')
+        self.grid.set_perception(self.grid.perceptions, "grid", self.breezeCoord, 'b')
+        self.grid.set_perception(self.grid.perceptions, "grid", self.stenchCoord, 's')
+        self.grid.set_perception(self.grid.perceptions, "grid", self.glitterCoord, 'g')
         self.updateAgentCoordinates(agent, newGen)
