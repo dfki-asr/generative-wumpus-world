@@ -50,18 +50,11 @@ class Grid:
 
     def get_coord(self, value):
         ret_vals = []
-        for i, e in enumerate(self.grid):
-            for j, e_2 in enumerate(e):
-                f = e_2.find(value)
-                l = e_2.rfind(value)
-                if f == -1 or l == -1:
-                    continue
-                elif f == l:
-                    ret_vals.append((j,i))
-                else:
-                    num = ((l - f)/2)+1
-                    for _ in range(int(num)):
-                        ret_vals.append((j, i))
+        for i in range(self.dimensions):
+            for j in range(self.dimensions):
+                cell = self.grid[j][i]
+                if any(o == value for o in cell):
+                    ret_vals.append((j, i))
         return ret_vals
 
         # raise ValueError("{!r} is not in list".format(value))
