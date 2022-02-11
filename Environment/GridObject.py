@@ -1,4 +1,6 @@
 from .Perception import Perception
+
+
 class Grid:
 
     def __init__(self, dimensions):
@@ -8,15 +10,15 @@ class Grid:
 
     def __str__(self):
         gridstr = "-" * 80 + "\n|"
-        for i,row in enumerate(self.grid):
+        for i, row in enumerate(self.grid):
             for cell in row:
                 l = len(cell)
                 if l == 0:
-                    gridstr += " "*7
+                    gridstr += " " * 7
                 else:
                     gridstr += str([obj for obj in cell])
                 gridstr += "|"
-            if(i<self.dimensions-1):
+            if (i < self.dimensions - 1):
                 gridstr += "\n" + "-" * 80 + "\n|"
             else:
                 gridstr += "\n" + "-" * 80
@@ -52,8 +54,11 @@ class Grid:
                     ret_vals.append((j, i))
         return ret_vals
 
-        # raise ValueError("{!r} is not in list".format(value))
-
+    def get_coord_and_remove_val(self, value):
+        for i in range(self.dimensions):
+            for j in range(self.dimensions):
+                cell = self.grid[i][j]
+                self.grid[i][j] = [x for x in cell if not x == value ]
 
     def neighboursOf(self, coord):
         temp_list = []
