@@ -1,3 +1,4 @@
+from .Perception import Perception
 class Grid:
 
     def __init__(self, dimensions):
@@ -8,18 +9,12 @@ class Grid:
     def __str__(self):
         gridstr = "-" * 80 + "\n|"
         for i,row in enumerate(self.grid):
-            for el in row:
-                l = len(el)
+            for cell in row:
+                l = len(cell)
                 if l == 0:
                     gridstr += " "*7
-                elif l == 1:
-                    gridstr += "   " + el + "   "
-                elif l == 3:
-                    gridstr += "  " + el + "  "
-                elif l == 5:
-                    gridstr += " " + el + " "
                 else:
-                    gridstr += el
+                    gridstr += str([obj for obj in cell])
                 gridstr += "|"
             if(i<self.dimensions-1):
                 gridstr += "\n" + "-" * 80 + "\n|"
