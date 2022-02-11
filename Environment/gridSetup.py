@@ -13,15 +13,15 @@ class gridSetup():
         self.goldCoordinate = self.getRandomCoordinates(dimension, n_golds)
         self.pitCoordinates = self.getRandomCoordinates(dimension, n_pits)
         self.wumpusCoordinates = self.getRandomCoordinates(dimension, n_wumpus)
-        self.grid.set_coord(self.wumpusCoordinates, 'W')
-        self.grid.set_coord(self.pitCoordinates, 'P')
-        self.grid.set_coord(self.goldCoordinate, 'G')
+        self.grid.set_coord(self.grid.grid, self.wumpusCoordinates, 'W')
+        self.grid.set_coord(self.grid.grid, self.pitCoordinates, 'P')
+        self.grid.set_coord(self.grid.grid, self.goldCoordinate, 'G')
         self.breezeCoord = self.grid.neighboursOf(self.pitCoordinates)
         self.stenchCoord = self.grid.neighboursOf(self.wumpusCoordinates)
         self.glitterCoord = self.goldCoordinate
-        self.grid.set_perc(self.breezeCoord, 'b')
-        self.grid.set_perc(self.stenchCoord, 's')
-        self.grid.set_perc(self.glitterCoord, 'g')
+        self.grid.set_perception(self.grid.perceptions,self.breezeCoord, 'b')
+        self.grid.set_perception(self.grid.perceptions, self.stenchCoord, 's')
+        self.grid.set_perception(self.grid.perceptions, self.glitterCoord, 'g')
 
 
     def getRandomCoordinates(self, dimension, num):
