@@ -32,8 +32,8 @@ class Grid:
                 grid[y][x] = []
             grid[y][x].append(value)
 
-    def set_perception(self, grid, source, coord, value, lvl, t, now, dec):
-        perc = Perception(source=source, phen=value, lvl=1, t=0, now=0, dec=0)
+    def set_perception(self, grid, source, coord, value, lvl, t,  dec):
+        perc = Perception(source=source, phen=value, lvl=lvl, t=t, dec=dec)
         for coord_i in coord:
             x, y = coord_i
             if grid[y][x] == None:
