@@ -1,7 +1,7 @@
 from Actions.directionMappings import directions
 from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
-import numpy as np
+from itertools import chain
 
 
 
@@ -91,6 +91,15 @@ class game():
         for i in range(len(dead_agents)):
             self.graveyard.append(dead_agents[i])
             self.agents.remove(dead_agents[i])
+
+        flat_perceptions = list(chain.from_iterable(self.cave.grid.perceptions))
+
+        val_perc = [item for item in flat_perceptions if len(item)>0]
+        for item in val_perc:
+            for i in range(len(item)):
+                if item[i].phen == "m" and item[i].getLevel(self.loopIter) <= 0:
+                    self.removePerception(item[i])
+
         self.cave.updateAgentCoordinates(self.agents, False)
 
     def updateStatus(self, agent, grid, statusString, action):  # check if agent alive/dead and assign fitness scores
@@ -128,15 +137,19 @@ class game():
                 source = "agent" + str(agent.id)
                 currentPerc = agent.perceive(self.cave)
                 if len(currentPerc)>0:  # add marker if the same agent has no marker in this location
+                    count = 0
                     for d, phen in currentPerc:  # if this agent has not left
                         if not phen.phen == 'm' and not phen.source == source:
-                            self.cave.grid.set_perception(self.cave.grid.perceptions, source, agent.locatedAt, "m",
-                                                          lvl=1, t=0,
-                                                          now=self.loopIter, dec=0.5)
+                            count += 1
+                            if count == len(currentPerc):
+                                self.cave.grid.set_perception(self.cave.grid.perceptions, source, agent.locatedAt, "m",
+                                                              lvl=1, t=self.loopIter, dec=0.5)
+                            else:
+                                continue
 
                 else:  # if no markers in this location, directly add safe marker
-                    self.cave.grid.set_perception(self.cave.grid.perceptions, source, agent.locatedAt, "m", lvl=1, t=0,
-                                                  now=self.loopIter, dec=0.5)
+                    self.cave.grid.set_perception(self.cave.grid.perceptions, source, agent.locatedAt, "m", lvl=1, t=self.loopIter,
+                                                  dec=0.5)
         # if not agent.arrow:
         #     actions_left = [action[1] for action in agent.chromList]
         #     valid_actions = ['F', 'B', 'L', 'R']
@@ -146,6 +159,12 @@ class game():
         facing = list(directions.keys())[list(directions.values()).index(agent.facing)]
         statusString += f'Agent {agent.id} located {agent.locatedAt}, facing {facing} fatigue {agent.fatigue}, fitness {agent.fitness}'
         print(statusString)
+
+    def removePerception(self, item):
+        for i,row in enumerate(self.cave.grid.perceptions):
+            for j, element in enumerate(row):
+                if item in element:
+                    self.cave.grid.perceptions[i][j].remove(item)
 
 def listIntersection(lst1, lst2):
     lst3 = [value for value in lst1 if value in lst2]
