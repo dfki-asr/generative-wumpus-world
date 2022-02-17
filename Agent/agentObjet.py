@@ -100,7 +100,7 @@ class agentobject:
         else:
             matches = []
             for p , a in self.chromList :
-              matches = [(d, phen) for d, phen in perceptions if p == phen.phen]
+              matches = [(d, phen) for d, phen in perceptions if p == phen.phen and phen.source != self.id]
               if len(matches) > 0 :
                   turn, phen = choice(matches) ## random choice now :\ we have to decide for something better here
                   perc_based_actions = [a for p,a in self.chromList if p == phen.phen]
