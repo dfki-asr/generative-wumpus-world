@@ -23,7 +23,7 @@ class agentobject:
         self.generation = 0
         self.fitness = 0
         self.rules = []
-        self.knownPhenomena = phenomena if phenomena else ["g", "b", "s"]
+        self.knownPhenomena = phenomena if phenomena else ["g", "b", "s", "m"]
         self.currentObservations = []
         self.chromList = chromosome if chromosome else self.initChromosome() ## alternatively: self.initChromosome_binnedActionLists()
         self.wonGame = False
