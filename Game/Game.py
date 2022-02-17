@@ -70,8 +70,8 @@ class game():
                     self.agents[i].fatigue -= 1
                 self.updateStatus(self.agents[i], self.cave, self.statusString, action)
             print("\n")
-            self.removeDeadAgents()
             self.evolvePerceptions()
+            self.removeDeadAgents()
             self.cave.updateAgentCoordinates(self.agents, False)
         for indiv in self.graveyard:
             print(f' overall: {indiv.fitness}, {indiv.chromList}')
@@ -96,11 +96,13 @@ class game():
     def evolvePerceptions(self):
         flat_perceptions = list(chain.from_iterable(self.cave.grid.perceptions))
         val_perc = [item for item in flat_perceptions if len(item)>0]
+        to_be_removed = []
         for item in val_perc:
             for i in range(len(item)):
                 item[i].setLevel(self.loopIter)
                 if item[i].lvl <= 0:
-                    self.removePerception(item[i])
+                    to_be_removed.append(item[i])
+            self.removePerception(to_be_removed)
 
     def updateStatus(self, agent, grid, statusString, action):  # check if agent alive/dead and assign fitness scores
         loc = agent.locatedAt
@@ -135,10 +137,14 @@ class game():
         if action == 'move':  # if agent moves
             if agent.alive:     # and remains alive after move
                 currentPerc = self.cave.grid.get_perc(agent.locatedAt)
+                level = 1
                 if(len(currentPerc) > 0):
-                    existingMarker = [p.lvl for p in currentPerc]
-                #self.cave.grid.set_perception(self.cave.grid.perceptions, source, agent.locatedAt, "m", lvl=1, t=self.loopIter,
-                #                                   dec=0.5)
+                    existingLevel = [p.lvl for p in currentPerc if p.source == agent.id]
+                    if len(existingLevel)>0:
+                        level = level+existingLevel[0]
+
+                self.cave.grid.set_perception(self.cave.grid.perceptions, agent.id, agent.locatedAt, "m", lvl=level, t=self.loopIter,
+                                                  dec=0.5)
         # if not agent.arrow:
         #     actions_left = [action[1] for action in agent.chromList]
         #     valid_actions = ['F', 'B', 'L', 'R']
@@ -149,11 +155,12 @@ class game():
         statusString += f'Agent {agent.id} located {agent.locatedAt}, facing {facing} fatigue {agent.fatigue}, fitness {agent.fitness}'
         print(statusString)
 
-    def removePerception(self, item):
+    def removePerception(self, items):
         for i,row in enumerate(self.cave.grid.perceptions):
             for j, element in enumerate(row):
-                if item in element:
-                    self.cave.grid.perceptions[i][j].remove(item)
+                for item in items:
+                    if item in element:
+                        self.cave.grid.perceptions[i][j].remove(item)
 
 def listIntersection(lst1, lst2):
     lst3 = [value for value in lst1 if value in lst2]
