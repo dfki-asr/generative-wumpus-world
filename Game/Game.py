@@ -134,22 +134,11 @@ class game():
 
         if action == 'move':  # if agent moves
             if agent.alive:     # and remains alive after move
-                source = "agent" + str(agent.id)
-                currentPerc = agent.perceive(self.cave)
-                if len(currentPerc)>0:  # add marker if the same agent has no marker in this location
-                    count = 0
-                    for d, phen in currentPerc:  # if this agent has not left
-                        if not phen.phen == 'm' and not phen.source == source:
-                            count += 1
-                            if count == len(currentPerc):
-                                self.cave.grid.set_perception(self.cave.grid.perceptions, source, agent.locatedAt, "m",
-                                                              lvl=1, t=self.loopIter, dec=0.5)
-                            else:
-                                continue
-
-                else:  # if no markers in this location, directly add safe marker
-                    self.cave.grid.set_perception(self.cave.grid.perceptions, source, agent.locatedAt, "m", lvl=1, t=self.loopIter,
-                                                  dec=0.5)
+                currentPerc = self.cave.grid.get_perc(agent.locatedAt)
+                if(len(currentPerc) > 0):
+                    existingMarker = [p.lvl for p in currentPerc]
+                #self.cave.grid.set_perception(self.cave.grid.perceptions, source, agent.locatedAt, "m", lvl=1, t=self.loopIter,
+                #                                   dec=0.5)
         # if not agent.arrow:
         #     actions_left = [action[1] for action in agent.chromList]
         #     valid_actions = ['F', 'B', 'L', 'R']
