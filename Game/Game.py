@@ -71,7 +71,8 @@ class game():
                 self.updateStatus(self.agents[i], self.cave, self.statusString, action)
             print("\n")
             self.removeDeadAgents()
-
+            self.evolvePerceptions()
+            self.cave.updateAgentCoordinates(self.agents, False)
         for indiv in self.graveyard:
             print(f' overall: {indiv.fitness}, {indiv.chromList}')
         fitness_list = [indiv.fitness for indiv in self.graveyard]
@@ -92,15 +93,14 @@ class game():
             self.graveyard.append(dead_agents[i])
             self.agents.remove(dead_agents[i])
 
+    def evolvePerceptions(self):
         flat_perceptions = list(chain.from_iterable(self.cave.grid.perceptions))
-
         val_perc = [item for item in flat_perceptions if len(item)>0]
         for item in val_perc:
             for i in range(len(item)):
-                if item[i].phen == "m" and item[i].getLevel(self.loopIter) <= 0:
+                item[i].setLevel(self.loopIter)
+                if item[i].lvl <= 0:
                     self.removePerception(item[i])
-
-        self.cave.updateAgentCoordinates(self.agents, False)
 
     def updateStatus(self, agent, grid, statusString, action):  # check if agent alive/dead and assign fitness scores
         loc = agent.locatedAt
