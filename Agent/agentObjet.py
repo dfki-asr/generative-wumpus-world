@@ -102,10 +102,11 @@ class agentobject:
             for p , a in self.chromList :
               matches = [(d, phen) for d, phen in perceptions if p == phen.phen and phen.source != self.id]
               if len(matches) > 0 :
-                  turn, phen = choice(matches) ## random choice now :\ we have to decide for something better here
+                  matches.sort(key=lambda x: x[1].lvl, reverse=True) # sort matches by lvl of intensitymatches.sort(key=lambda x: x[1].lvl, reverse=True) # sort matches by lvl of intensity
+                  turn, phen = matches[0]
                   perc_based_actions = [a for p,a in self.chromList if p == phen.phen]
                   break ## for first matching perception
-        action = choice(perc_based_actions) if len(perc_based_actions) > 0 else choice(['F','B','L','R'])
+        action = perc_based_actions[0] if len(perc_based_actions) > 0 else choice(['F','B','L','R'])
         direction, action = tab_of_act[action]
         return turn, direction, action
 
