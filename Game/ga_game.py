@@ -97,7 +97,7 @@ class ga_game:
               self.flipmutation(indiv) ## use self.flip_binnedActions(indiv) fpr binned action list chromosome model
 
     def flipmutation(self, indiv):
-        numFlipped = randrange(self.flip_max)
+        numFlipped = randrange(1,self.flip_max)
         size = len(indiv.chromList)
         for _ in range(numFlipped):
             index = randrange(size)
@@ -116,7 +116,7 @@ class ga_game:
             rule[1][flipIndex] = flipTo
 
     def swapmutation(self, indiv):
-        n1, n2 = randrange(len(indiv.chromList)) , randrange(len(indiv.chromList))
+        n1, n2 = randrange(1,len(indiv.chromList)) , randrange(1,len(indiv.chromList))
         indiv.chromList[n1] , indiv.chromList[n2] = indiv.chromList[n2] , indiv.chromList[n1]
 
     def swap_binnedActions(self, indiv):
