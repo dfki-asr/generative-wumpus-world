@@ -96,6 +96,12 @@ class agentobject:
         turn = self.facing
         if len(perceptions) == 0:
             action = choice(['F','B','L','R'])
+        elif bool([phen for d, phen in perceptions if phen == 'g']):
+            self.gotGold = True
+            self.wonGame = True
+            self.fitness += 200
+            print(f'agent {self.id} found gold, ')
+
         else:
             matches = []
             for p , a in self.chromList :

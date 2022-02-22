@@ -61,13 +61,6 @@ class game():
                             self.statusString +=f'Arrow missed, '
                     self.agents[i].fatigue -= 1
 
-                elif action == 'pickup':
-                    if self.agents[i].locatedAt in self.cave.goldCoordinate:
-                        self.agents[i].gotGold = True
-                        self.agents[i].wonGame = True
-                        self.agents[i].fitness += 200
-                        self.statusString += f'agent {i} found gold, '
-                    self.agents[i].fatigue -= 1
                 self.updateStatus(self.agents[i], self.cave, self.statusString, action)
             print("\n")
             self.evolvePerceptions()
