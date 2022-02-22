@@ -107,15 +107,10 @@ class game():
     def updateStatus(self, agent, grid, statusString, action):  # check if agent alive/dead and assign fitness scores
         loc = agent.locatedAt
         # print(f'location {loc} p {grid.pitCoordinates} s {grid.stenchCoord}')
-        if loc[0] in grid.goldCoordinate:
-            if agent.gotGold:
-                print(f'agent {agent.id} won game, has fitness {agent.fitness}, exiting')
-                agent.alive = False
-            else:
-                print(f'agent {agent.id} could find gold')
-                agent.fitness += 20
-            if agent.fatigue <= 0:
-                agent.alive = False
+        # if loc[0] in grid.goldCoordinate:
+        if agent.gotGold:
+            print(f'agent {agent.id} won game, has fitness {agent.fitness}, exiting')
+            agent.alive = False
 
         if agent.fatigue <= 0:
             statusString += f'agent {agent.id} located at {agent.locatedAt} starved to death, '
@@ -137,7 +132,7 @@ class game():
         if action == 'move':  # if agent moves
             if agent.alive:     # and remains alive after move
                 currentPerc = self.cave.grid.get_perc(agent.locatedAt)
-                level = 1
+                level = 5
                 if(len(currentPerc) > 0):
                     existingLevel = [p.lvl for p in currentPerc if p.source == agent.id]
                     if len(existingLevel)>0:
