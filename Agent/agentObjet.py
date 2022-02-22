@@ -23,7 +23,7 @@ class agentobject:
         self.generation = 0
         self.fitness = 0
         self.rules = []
-        self.knownPhenomena = phenomena if phenomena else ["g", "b", "s", "m"]
+        self.knownPhenomena = phenomena if phenomena else ["b", "s", "m"]
         self.currentObservations = []
         self.chromList = chromosome if chromosome else self.initChromosome() ## alternatively: self.initChromosome_binnedActionLists()
         self.wonGame = False
@@ -51,7 +51,6 @@ class agentobject:
 
     def initChromosome(self):    # initialises the agent with random chromosomes of random length (between 3 and self.size_limit)
         chrom_list = []
-        chrom_list.append(('g','P')) # digging for gold is the initial instinct of any agent
         for i in range(1, self.size_limit): # starting to count at 1 because first pair is digging for gold
             item = choice(list(tab_of_act.keys()))
             key = choice(self.knownPhenomena)

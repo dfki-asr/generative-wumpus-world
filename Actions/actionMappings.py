@@ -3,7 +3,6 @@ tab_of_act = {
             'B': ('move', 'B'),
             'R': ('move', 'R'),
             'L': ('move', 'L'),
-            'P': ('pickup', ''),
             'f': ('shoot', 'F'),
             'b': ('shoot', 'B'),
             'r': ('shoot', 'R'),
