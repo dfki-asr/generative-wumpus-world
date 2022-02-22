@@ -23,7 +23,7 @@ class agentobject:
         self.generation = 0
         self.fitness = 0
         self.rules = []
-        self.knownPhenomena = phenomena if phenomena else ["b", "s", "m"]
+        self.knownPhenomena = phenomena if phenomena else ["b", "s", "m","g"]
         self.currentObservations = []
         self.chromList = chromosome if chromosome else self.initChromosome() ## alternatively: self.initChromosome_binnedActionLists()
         self.wonGame = False
@@ -96,7 +96,7 @@ class agentobject:
         turn = self.facing
         if len(perceptions) == 0:
             action = choice(['F','B','L','R'])
-        elif bool([phen for d, phen in perceptions if phen == 'g']):
+        elif bool([(d, phen) for d, phen in perceptions if phen == 'g' and d == (0,0)]):
             self.gotGold = True
             self.wonGame = True
             self.fitness += 200
