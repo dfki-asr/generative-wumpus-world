@@ -1,47 +1,9 @@
 from Actions.directionMappings import directions
 from Environment.gridSetup import gridSetup
 from Agent.agentObjet import agentobject
-import numpy as np
+from itertools import chain
 
-def updateStatus(agent, grid, statusString):  # check if agent alive/dead and assign fitness scores
-    loc = agent.locatedAt
-    # print(f'location {loc} p {grid.pitCoordinates} s {grid.stenchCoord}')
-    if loc[0] in grid.goldCoordinate:
-        if agent.gotGold:
-            print(f'agent {agent.id} won game, has fitness {agent.fitness}, exiting')
-            agent.alive = False
-        else:
-            print(f'agent {agent.id} could find gold')
-            agent.fitness += 20
-        if agent.fatigue <= 0:
-            agent.alive = False
 
-    if agent.fatigue <= 0 :
-        statusString += f'agent {agent.id} located at {agent.locatedAt} starved to death, '
-        agent.alive = False
-
-    elif loc[0] in grid.wumpusCoordinates :
-        print(f'agent {agent.id} located at {agent.locatedAt} was eaten by Wumpus')
-        agent.alive = False
-        agent.fitness -= 10
-        print("------------------")
-        return
-    elif loc[0] in grid.pitCoordinates :
-        print(f'agent {agent.id} located at {agent.locatedAt} fell into a pit')
-        agent.alive = False
-        agent.fitness -= 10
-        print("------------------")
-        return
-
-    # if not agent.arrow:
-    #     actions_left = [action[1] for action in agent.chromList]
-    #     valid_actions = ['F', 'B', 'L', 'R']
-    #     if not listIntersection(actions_left, valid_actions):
-    #         agent.alive = False
-    #         statusString += f'agent killed due to no move actions in chromList, but also out of arrows, '
-    facing = list(directions.keys())[list(directions.values()).index(agent.facing)]
-    statusString += f'Agent {agent.id} located {agent.locatedAt}, facing {facing} fatigue {agent.fatigue}, fitness {agent.fitness}'
-    print(statusString)
 
 
 class game():
@@ -57,6 +19,7 @@ class game():
         self.graveyard = []
         self.bestIndividual = None
         self.statusString = ""
+        self.loopIter = 0
 
     def initialize_agents(self):    # init agents and add them to grid
         agents = []
@@ -73,6 +36,7 @@ class game():
 
     def run_game(self):
         while(self.agents):
+            self.loopIter += 1
             for i in range(len(self.agents)):
                 self.statusString = ""
                 # print(f'agent {i} located at {agents[i].locatedAt}')
@@ -84,7 +48,7 @@ class game():
                 if action == 'move':
                     self.agents[i].move(direction, self.cave)
                     self.statusString = f'Agent {self.agents[i].id} move {direction},  '
-                if action == 'shoot':
+                elif action == 'shoot':
                     if self.agents[i].arrow:
                         self.agents[i].arrow = False
                         targCoord = self.agents[i].shootTargetCoord(self.cave, direction)
@@ -97,22 +61,18 @@ class game():
                             self.statusString +=f'Arrow missed, '
                     self.agents[i].fatigue -= 1
 
-                if action == 'pickup':
+                elif action == 'pickup':
                     if self.agents[i].locatedAt in self.cave.goldCoordinate:
                         self.agents[i].gotGold = True
                         self.agents[i].wonGame = True
                         self.agents[i].fitness += 200
                         self.statusString += f'agent {i} found gold, '
                     self.agents[i].fatigue -= 1
-                updateStatus(self.agents[i], self.cave, self.statusString)
-                # print(f'After move, agent {self.agents[i].id} located at {self.agents[i].locatedAt}')
+                self.updateStatus(self.agents[i], self.cave, self.statusString, action)
             print("\n")
-            # print(f'agent length after removing dead guys {len(self.agents)}')
+            self.evolvePerceptions()
             self.removeDeadAgents()
-
-            # print(self.cave.grid)
-        # for i,agent in enumerate(self.agents):
-        #     print(f'agent {i} has known phenomena: {agent.knownPhenomena}')
+            self.cave.updateAgentCoordinates(self.agents, False)
         for indiv in self.graveyard:
             print(f' overall: {indiv.fitness}, {indiv.chromList}')
         fitness_list = [indiv.fitness for indiv in self.graveyard]
@@ -132,7 +92,75 @@ class game():
         for i in range(len(dead_agents)):
             self.graveyard.append(dead_agents[i])
             self.agents.remove(dead_agents[i])
-        self.cave.updateAgentCoordinates(self.agents, False)
+
+    def evolvePerceptions(self):
+        flat_perceptions = list(chain.from_iterable(self.cave.grid.perceptions))
+        val_perc = [item for item in flat_perceptions if len(item)>0]
+        to_be_removed = []
+        for item in val_perc:
+            for i in range(len(item)):
+                item[i].setLevel(self.loopIter)
+                if item[i].lvl <= 0:
+                    to_be_removed.append(item[i])
+            self.removePerception(to_be_removed)
+
+    def updateStatus(self, agent, grid, statusString, action):  # check if agent alive/dead and assign fitness scores
+        loc = agent.locatedAt
+        # print(f'location {loc} p {grid.pitCoordinates} s {grid.stenchCoord}')
+        if loc[0] in grid.goldCoordinate:
+            if agent.gotGold:
+                print(f'agent {agent.id} won game, has fitness {agent.fitness}, exiting')
+                agent.alive = False
+            else:
+                print(f'agent {agent.id} could find gold')
+                agent.fitness += 20
+            if agent.fatigue <= 0:
+                agent.alive = False
+
+        if agent.fatigue <= 0:
+            statusString += f'agent {agent.id} located at {agent.locatedAt} starved to death, '
+            agent.alive = False
+
+        elif loc[0] in grid.wumpusCoordinates:
+            print(f'agent {agent.id} located at {agent.locatedAt} was eaten by Wumpus')
+            agent.alive = False
+            agent.fitness -= 10
+            print("------------------")
+            return
+        elif loc[0] in grid.pitCoordinates:
+            print(f'agent {agent.id} located at {agent.locatedAt} fell into a pit')
+            agent.alive = False
+            agent.fitness -= 10
+            print("------------------")
+            return
+
+        if action == 'move':  # if agent moves
+            if agent.alive:     # and remains alive after move
+                currentPerc = self.cave.grid.get_perc(agent.locatedAt)
+                level = 1
+                if(len(currentPerc) > 0):
+                    existingLevel = [p.lvl for p in currentPerc if p.source == agent.id]
+                    if len(existingLevel)>0:
+                        level = level+existingLevel[0]
+
+                self.cave.grid.set_perception(self.cave.grid.perceptions, agent.id, agent.locatedAt, "m", lvl=level, t=self.loopIter,
+                                                  dec=0.5)
+        # if not agent.arrow:
+        #     actions_left = [action[1] for action in agent.chromList]
+        #     valid_actions = ['F', 'B', 'L', 'R']
+        #     if not listIntersection(actions_left, valid_actions):
+        #         agent.alive = False
+        #         statusString += f'agent killed due to no move actions in chromList, but also out of arrows, '
+        facing = list(directions.keys())[list(directions.values()).index(agent.facing)]
+        statusString += f'Agent {agent.id} located {agent.locatedAt}, facing {facing} fatigue {agent.fatigue}, fitness {agent.fitness}'
+        print(statusString)
+
+    def removePerception(self, items):
+        for i,row in enumerate(self.cave.grid.perceptions):
+            for j, element in enumerate(row):
+                for item in items:
+                    if item in element:
+                        self.cave.grid.perceptions[i][j].remove(item)
 
 def listIntersection(lst1, lst2):
     lst3 = [value for value in lst1 if value in lst2]

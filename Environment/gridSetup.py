@@ -13,15 +13,15 @@ class gridSetup():
         self.goldCoordinate = self.getRandomCoordinates(dimension, n_golds)
         self.pitCoordinates = self.getRandomCoordinates(dimension, n_pits)
         self.wumpusCoordinates = self.getRandomCoordinates(dimension, n_wumpus)
-        self.grid.set_coord(self.wumpusCoordinates, 'W')
-        self.grid.set_coord(self.pitCoordinates, 'P')
-        self.grid.set_coord(self.goldCoordinate, 'G')
+        self.grid.set_coord(self.grid.grid, self.wumpusCoordinates, 'W')
+        self.grid.set_coord(self.grid.grid, self.pitCoordinates, 'P')
+        self.grid.set_coord(self.grid.grid, self.goldCoordinate, 'G')
         self.breezeCoord = self.grid.neighboursOf(self.pitCoordinates)
         self.stenchCoord = self.grid.neighboursOf(self.wumpusCoordinates)
         self.glitterCoord = self.goldCoordinate
-        self.grid.set_perc(self.breezeCoord, 'b')
-        self.grid.set_perc(self.stenchCoord, 's')
-        self.grid.set_perc(self.glitterCoord, 'g')
+        self.grid.set_perception(self.grid.perceptions, "grid", self.breezeCoord, 'b', lvl=1, t=0,  dec=0)
+        self.grid.set_perception(self.grid.perceptions, "grid", self.stenchCoord, 's', lvl=1, t=0, dec=0)
+        self.grid.set_perception(self.grid.perceptions, "grid", self.glitterCoord, 'g', lvl=1, t=0,  dec=0)
 
 
     def getRandomCoordinates(self, dimension, num):
@@ -41,31 +41,18 @@ class gridSetup():
         return temp_list
 
     def updateAgentCoordinates(self, agents:list, newGen):
-        old = self.grid.get_coord('A')
+        self.grid.remov_value_from_grid('A') # remove previous locations of agents from grid
         # print(f'previous coordinates are {old}')
-        if newGen:                     # if there no agents are in the grid, i.e at the beginning of the run
-            for agent in agents:
-                self.grid.set_coord(agent.locatedAt, 'A')       # put agents on the grid
-        else:                                # after an iteration, where agents are populated at least once
-            for i,agent in enumerate(agents):      # loop to remove all previous positions of indiv. agents
-                val = self.grid.grid[old[i][0]][old[i][1]]
-                # print(f'val at {old[i]} is {val}')
-                while 'A' in val:           # to remove multiple agents which may be in the same position
-                    if '+A' in val:
-                        val = val.replace('+A', '')
-                    elif 'A' in val:        # to romove agent when it is the only entity in that position
-                        val = val.replace('A', '')
-                self.grid.grid[old[i][0]][old[i][1]] = val  # previous contents of grid, after removing agents
-            for agent in agents:
-                 if agent.alive:
-                    self.grid.set_coord(agent.locatedAt, 'A')  # populate new agent locations on grid
+        for agent in agents:
+             if agent.alive:
+                self.grid.set_coord(self.grid.grid, agent.locatedAt, 'A')  # populate new agent locations on grid
 
     def resetGrid(self, agent:list, newGen):
         self.grid = Grid(self.dimension)
-        self.grid.set_coord(self.wumpusCoordinates, 'W')
-        self.grid.set_coord(self.pitCoordinates, 'P')
-        self.grid.set_coord(self.goldCoordinate, 'G')
-        self.grid.set_perc(self.breezeCoord, 'b')
-        self.grid.set_perc(self.stenchCoord, 's')
-        self.grid.set_perc(self.glitterCoord, 'g')
+        self.grid.set_coord(self.grid.grid, self.wumpusCoordinates, 'W')
+        self.grid.set_coord(self.grid.grid,self.pitCoordinates, 'P')
+        self.grid.set_coord(self.grid.grid, self.goldCoordinate, 'G')
+        self.grid.set_perception(self.grid.perceptions, "grid", self.breezeCoord, 'b', lvl=1, t=0, dec=0)
+        self.grid.set_perception(self.grid.perceptions, "grid", self.stenchCoord, 's', lvl=1, t=0,  dec=0)
+        self.grid.set_perception(self.grid.perceptions, "grid", self.glitterCoord, 'g', lvl=1, t=0, dec=0)
         self.updateAgentCoordinates(agent, newGen)

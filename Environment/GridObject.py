@@ -1,48 +1,44 @@
+from .Perception import Perception
+
+
 class Grid:
 
     def __init__(self, dimensions):
         self.dimensions = dimensions
-        self.grid = [[""] * dimensions for _ in range(dimensions)]
-        self.perceptions = [[""] * dimensions for _ in range(dimensions)]
+        self.grid = [[[] for _ in range(dimensions)] for _ in range(dimensions)]
+        self.perceptions = [[[] for _ in range(dimensions)] for _ in range(dimensions)]
 
     def __str__(self):
         gridstr = "-" * 80 + "\n|"
-        for i,row in enumerate(self.grid):
-            for el in row:
-                l = len(el)
+        for i, row in enumerate(self.grid):
+            for cell in row:
+                l = len(cell)
                 if l == 0:
-                    gridstr += " "*7
-                elif l == 1:
-                    gridstr += "   " + el + "   "
-                elif l == 3:
-                    gridstr += "  " + el + "  "
-                elif l == 5:
-                    gridstr += " " + el + " "
+                    gridstr += " " * 7
                 else:
-                    gridstr += el
+                    gridstr += str([obj for obj in cell])
                 gridstr += "|"
-            if(i<self.dimensions-1):
+            if (i < self.dimensions - 1):
                 gridstr += "\n" + "-" * 80 + "\n|"
             else:
                 gridstr += "\n" + "-" * 80
 
         return gridstr
 
-    def set_coord(self, coord, value):
+    def set_coord(self, grid, coord, value):
         for coord_i in coord:
             x, y = coord_i
-            if self.grid[y][x] == "":
-                self.grid[y][x] += value
-            else:
-                self.grid[y][x] += ("+" + value)
+            if grid[y][x] == None:
+                grid[y][x] = []
+            grid[y][x].append(value)
 
-    def set_perc(self, coord, value):
+    def set_perception(self, grid, source, coord, value, lvl, t,  dec):
+        perc = Perception(source=source, phen=value, lvl=lvl, t=t, dec=dec)
         for coord_i in coord:
             x, y = coord_i
-            if self.perceptions[y][x] == "":
-                self.perceptions[y][x] += value
-            else:
-                self.perceptions[y][x] += ("+" + value)
+            if grid[y][x] == None:
+                grid[y][x] = []
+            grid[y][x].append(perc)
 
     def get_perc(self, coord):
         for coord_i in coord:
@@ -51,22 +47,18 @@ class Grid:
 
     def get_coord(self, value):
         ret_vals = []
-        for i, e in enumerate(self.grid):
-            for j, e_2 in enumerate(e):
-                f = e_2.find(value)
-                l = e_2.rfind(value)
-                if f == -1 or l == -1:
-                    continue
-                elif f == l:
-                    ret_vals.append((j,i))
-                else:
-                    num = ((l - f)/2)+1
-                    for _ in range(int(num)):
-                        ret_vals.append((j, i))
+        for i in range(self.dimensions):
+            for j in range(self.dimensions):
+                cell = self.grid[j][i]
+                if any(o == value for o in cell):
+                    ret_vals.append((j, i))
         return ret_vals
 
-        # raise ValueError("{!r} is not in list".format(value))
-
+    def remov_value_from_grid(self, value):
+        for i in range(self.dimensions):
+            for j in range(self.dimensions):
+                cell = self.grid[i][j]
+                self.grid[i][j] = [x for x in cell if not x == value ]
 
     def neighboursOf(self, coord):
         temp_list = []
