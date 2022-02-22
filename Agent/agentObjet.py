@@ -18,7 +18,7 @@ def isValidDirection(grid, position):
 class agentobject:
     def __init__(self, grid: gridSetup, chromosome = None, phenomena = None, count=0):
         self.grid = grid
-        self.size_limit = 5
+        self.size_limit = 10
         self.fatigue = 40
         self.generation = 0
         self.fitness = 0
