@@ -48,6 +48,8 @@ class game():
                 if action == 'move':
                     self.agents[i].move(direction, self.cave)
                     self.statusString = f'Agent {self.agents[i].id} move {direction},  '
+                    x, y = self.agents[i].locatedAt[0]
+                    self.cave.grid.heatmap[y][x] += 1
                 elif action == 'shoot':
                     if self.agents[i].arrow:
                         self.agents[i].arrow = False

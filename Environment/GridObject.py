@@ -7,6 +7,7 @@ class Grid:
         self.dimensions = dimensions
         self.grid = [[[] for _ in range(dimensions)] for _ in range(dimensions)]
         self.perceptions = [[[] for _ in range(dimensions)] for _ in range(dimensions)]
+        self.heatmap = [[ 0 for _ in range(dimensions)] for _ in range(dimensions)]
 
     def __str__(self):
         gridstr = "-" * 80 + "\n|"

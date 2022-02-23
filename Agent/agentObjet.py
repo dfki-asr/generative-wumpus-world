@@ -34,6 +34,8 @@ class agentobject:
         self.id = count
         self.action_generator = (act for act in self.chromList)
         self.locatedAt = self.getRandomCoordinates(grid)
+        x, y = self.locatedAt[0]
+        self.grid.grid.heatmap[y][x] += 1
         self.facing =  choice(list(directions.values()))
 
     def initParameters(self, count):

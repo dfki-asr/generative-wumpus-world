@@ -1,9 +1,12 @@
+import time
+
 from Actions.actionMappings import tab_of_act
 from Actions.directionMappings import directions
 from Game.Game import game
 from random import sample, randrange, random, choice
 from Agent.agentObjet import agentobject
 import matplotlib.pyplot as plt
+import seaborn as sns
 from statistics import mean
 
 class ga_game:
@@ -43,6 +46,10 @@ class ga_game:
                 fitnessList.append(current_gen_sorted[i].fitness)
             avg_fitness.append(mean(fitnessList))
             # this gets new population
+            # heatPlot = plt.figure(1)
+            ax = sns.heatmap(self.gameRun.cave.grid.heatmap, linewidth=0.5, annot=True, fmt="d", cmap="YlGnBu")
+            plt.show()
+            plt.close()
             self.reset_game(agent_population)
         plt.plot(best_fitness, label="best fitness")
         plt.plot(avg_fitness, label="avg fitness")
