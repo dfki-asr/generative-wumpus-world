@@ -48,6 +48,20 @@ class ga_game:
             # this gets new population
             # heatPlot = plt.figure(1)
             ax = sns.heatmap(self.gameRun.cave.grid.heatmap, linewidth=0.5, annot=True, fmt="d", cmap="YlGnBu")
+            gx, gy = self.gameRun.cave.goldCoordinate[0]
+            orig = ax.texts[gy*10+gx].get_text()
+            string = orig+'G'
+            ax.texts[gy * 10 + gx].set_fontsize(20)
+            ax.texts[gy*10+gx].set_text(string)
+            for i in range(len(self.gameRun.cave.wumpusCoordinates)):
+                wx, wy = self.gameRun.cave.wumpusCoordinates[i]
+                ax.texts[wy * 10 + wx].set_fontsize(20)
+                ax.texts[wy * 10 + wx].set_text('W')
+            for i in range(len(self.gameRun.cave.pitCoordinates)):
+                px, py = self.gameRun.cave.pitCoordinates[i]
+                ax.texts[py * 10 + px].set_fontsize(20)
+                ax.texts[py * 10 + px].set_text('P')
+
             plt.show()
             plt.close()
             self.reset_game(agent_population)
