@@ -38,21 +38,10 @@ class agentobject:
         self.grid.grid.heatmap[y][x] += 1
         self.facing =  choice(list(directions.values()))
 
-    def initParameters(self, count):
-        self.size_limit = 10
-        self.fatigue = 40
-        self.fitness = 0
-        self.wonGame = False
-        self.alive = True
-        self.arrow = True
-        self.gotGold = False
-        self.killedWumpus = False
-        self.id = count
-        self.action_generator = (act for act in self.chromList)
-        self.locatedAt = self.getRandomCoordinates(self.grid)
 
     def initChromosome(self):    # initialises the agent with random chromosomes of random length (between 3 and self.size_limit)
         chrom_list = []
+        chrom_list.append(('g','F'))
         for i in range(1, self.size_limit): # starting to count at 1 because first pair is digging for gold
             item = choice(list(tab_of_act.keys()))
             key = choice(self.knownPhenomena)
@@ -102,6 +91,7 @@ class agentobject:
             self.gotGold = True
             self.wonGame = True
             self.fitness += 200
+            self.alive = False
             print(f'agent {self.id} found gold, ')
 
         else:
