@@ -11,7 +11,7 @@ from statistics import mean
 
 class ga_game:
     def __init__(self, n_generations, n_agents, crossover_rate, mutation_rate):
-        self.gameRun = game(n_wumpus=1, n_golds=1, n_pits=9, n_agents=n_agents, n_initChrom=4, dimension=10)
+        self.gameRun = game(n_wumpus=1, n_golds=1, n_pits=3, n_agents=n_agents, n_initChrom=4, dimension=10)
         self.n_gens = n_generations
         self.crossover_rate = crossover_rate
         self.cross_count = 0
@@ -123,7 +123,7 @@ class ga_game:
         for _ in range(numFlipped):
             index = randrange(size)
             (perc, react) = indiv.chromList[index]
-            if (perc, react) != ('g','P') : # Agents should never forget that
+            if (perc, react) != ('g','F') : # Agents should never forget that
                 indiv.chromList[index] = ( indiv.chromList[index][0] , choice(list(tab_of_act)))
 
     def flip_binnedActions(self, indiv):
@@ -137,7 +137,7 @@ class ga_game:
             rule[1][flipIndex] = flipTo
 
     def swapmutation(self, indiv):
-        n1, n2 = randrange(len(indiv.chromList)) , randrange(len(indiv.chromList))
+        n1, n2 = randrange(1, len(indiv.chromList)) , randrange(1, len(indiv.chromList))
         indiv.chromList[n1] , indiv.chromList[n2] = indiv.chromList[n2] , indiv.chromList[n1]
 
     def swap_binnedActions(self, indiv):
