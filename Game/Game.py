@@ -47,7 +47,7 @@ class game():
                 self.agents[i].facing = turnFirst
                 if action == 'move':
                     self.agents[i].move(direction, self.cave)
-                    self.statusString = f'Agent {self.agents[i].id} move {direction},  '
+                    self.statusString += f'Agent {self.agents[i].id} move {direction},  '
                     x, y = self.agents[i].locatedAt[0]
                     self.cave.grid.heatmap[y][x] += 1
                 elif action == 'shoot':
@@ -61,6 +61,8 @@ class game():
                             self.statusString += f'agent {self.agents[i].id} killed wumpus at {targCoord}, '
                         else:
                             self.statusString +=f'Arrow missed, '
+                    else:
+                        self.statusString += f'Agent {self.agents[i].id} shot, but no arrows, '
                     self.agents[i].fatigue -= 1
 
                 self.updateStatus(self.agents[i], self.cave, self.statusString, action)
@@ -103,12 +105,13 @@ class game():
         loc = agent.locatedAt
         # print(f'location {loc} p {grid.pitCoordinates} s {grid.stenchCoord}')
         if loc[0] in grid.goldCoordinate:
-            if agent.gotGold:
+            if agent.alive:
+                agent.fitness += 200
                 print(f'agent {agent.id} won game, has fitness {agent.fitness}, exiting')
                 agent.alive = False
-            else:
-                print(f'agent {agent.id} could find gold')
-                agent.fitness += 20
+            # else:
+            #     print(f'agent {agent.id} could find gold')
+            #     agent.fitness += 20
             if agent.fatigue <= 0:
                 agent.alive = False
 
@@ -132,11 +135,12 @@ class game():
         if action == 'move':  # if agent moves
             if agent.alive:     # and remains alive after move
                 currentPerc = self.cave.grid.get_perc(agent.locatedAt)
-                level = 1
+                level = 0.1
                 if(len(currentPerc) > 0):
                     existingLevel = [p.lvl for p in currentPerc if p.source == agent.id]
                     if len(existingLevel)>0:
                         level = level+existingLevel[0]
+                        level = min(level, 1)
 
                 self.cave.grid.set_perception(self.cave.grid.perceptions, agent.id, agent.locatedAt, "m", lvl=level, t=self.loopIter,
                                                   dec=0.5)
