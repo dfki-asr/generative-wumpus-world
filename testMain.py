@@ -16,7 +16,7 @@ def main(print_file):
         f = open(targetFile, 'w')
         sys.stdout = f
 
-    game1 = ga_game(10, 50, 0.9, 0.05)
+    game1 = ga_game(50,20, 0.8, 0.25)
     game1.run()
 
     if print_file:
