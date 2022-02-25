@@ -90,9 +90,14 @@ class ga_game:
         return new_pop
 
     def selection(self, population):
+        num = 5
         mating_pool = []
-        for i in range(self.top_mates):
-            mating_pool.append(population[i])
+
+        for _ in range(self.cross_count):
+            rand_sel = sample(population, num)
+            rand_sel.sort(key=lambda pop: pop.fitness, reverse=True)
+            winner = rand_sel[0]
+            mating_pool.append(winner)
         return mating_pool
 
     def crossover(self, mating_pool, generation):
@@ -100,8 +105,8 @@ class ga_game:
         # loop over for (cross_count/2) times, choosing two parents each time
         for i in range(0, self.cross_count, 2):
             while True:
-                indv1 = mating_pool[randrange(self.top_mates)]
-                indv2 = mating_pool[randrange(self.top_mates)]
+                indv1 = mating_pool[randrange(self.cross_count)]
+                indv2 = mating_pool[randrange(self.cross_count)]
                 if indv1 != indv2 : break
             chrom1, chrom2 = self.onepointcrossover(indv1.chromList, indv2.chromList) ## use self.onepointcrossover_binned_actions for binned action chromosome model
             phenomena = list(set().union(indv1.knownPhenomena, indv2.knownPhenomena))
