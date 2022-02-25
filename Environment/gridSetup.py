@@ -10,7 +10,7 @@ class gridSetup():
         self.breezeCoord = []
         self.glitterCoord = []
         self.goldCoordinate = []
-        self.goldCoordinate = self.getRandomCoordinates(dimension, n_golds)
+        self.goldCoordinate = [(8,7)]#self.getRandomCoordinates(dimension, n_golds)
         self.pitCoordinates = self.getRandomCoordinates(dimension, n_pits)
         self.wumpusCoordinates = self.getRandomCoordinates(dimension, n_wumpus)
         self.grid.set_coord(self.grid.grid, self.wumpusCoordinates, 'W')
