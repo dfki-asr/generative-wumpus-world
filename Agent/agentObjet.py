@@ -19,7 +19,7 @@ class agentobject:
     def __init__(self, grid: gridSetup, chromosome=None, phenomena=None, count=0):
         self.grid = grid
         self.size_limit = 10
-        self.fatigue = 40
+        self.fatigue = 80
         self.generation = 0
         self.fitness = 0
         self.rules = []
@@ -150,7 +150,7 @@ class agentobject:
         if isValidDirection(grid, newPos):
             self.locatedAt.pop(0)
             self.locatedAt.append(newPos)
-            self.fitness += 0
+            self.fitness += 1
 
     def shootTargetCoord(self, grid, direction):  # get the target coordinate where arrow will be shot
         angle = angles[direction]
