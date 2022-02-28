@@ -24,6 +24,7 @@ class ga_game:
         agent_population = self.gameRun.agents
         best_fitness = []
         avg_fitness = []
+        current_gen_sorted = []
         # how many brand new chromosomes, vs take over from prev gen gives cross_count
         self.cross_count = int(len(agent_population) * self.crossover_rate)
         self.cross_count = self.cross_count if self.cross_count % 2 == 0 else self.cross_count + 1
@@ -31,7 +32,7 @@ class ga_game:
             print(f'\nSTARTING NEW GENERATION {i}')
             # set agent list of gameobject
             self.gameRun.agents = agent_population
-            self.printNewPopDetails()
+            self.printNewPopDetails(self.gameRun)
             # reset graveyard
             # run game for this population
             self.gameRun.run_game()
@@ -55,12 +56,16 @@ class ga_game:
             ax.texts[gy*10+gx].set_text(string)
             for i in range(len(self.gameRun.cave.wumpusCoordinates)):
                 wx, wy = self.gameRun.cave.wumpusCoordinates[i]
+                orig = ax.texts[wy * 10 + wx].get_text()
+                string = orig + 'W'
                 ax.texts[wy * 10 + wx].set_fontsize(20)
-                ax.texts[wy * 10 + wx].set_text('W')
+                ax.texts[wy * 10 + wx].set_text(string)
             for i in range(len(self.gameRun.cave.pitCoordinates)):
                 px, py = self.gameRun.cave.pitCoordinates[i]
+                orig = ax.texts[py * 10 + px].get_text()
+                string = orig + 'P'
                 ax.texts[py * 10 + px].set_fontsize(20)
-                ax.texts[py * 10 + px].set_text('P')
+                ax.texts[py * 10 + px].set_text(string)
 
             plt.show()
             plt.close()
@@ -72,13 +77,17 @@ class ga_game:
         plt.legend(loc="upper right")
         plt.title('Fitness progression over generations')
         plt.show()
+        final_run = game(n_wumpus=1, n_golds=1, n_pits=3, n_agents=1, n_initChrom=4, dimension=10, agents=[current_gen_sorted[0]])
+        self.printNewPopDetails(final_run)
+        final_run.run_game()
 
-    def printNewPopDetails(self):
-        for i in range(len(self.gameRun.agents)):
-            loc = self.gameRun.agents[i].locatedAt
-            facing = list(directions.keys())[list(directions.values()).index(self.gameRun.agents[i].facing)]
-            print(f'agent {i} located at {loc}, facing {facing} with chromosomes {self.gameRun.agents[i].chromList}')
-        print(self.gameRun.cave.grid)
+
+    def printNewPopDetails(self, game_object):
+        for i in range(len(game_object.agents)):
+            loc = game_object.agents[i].locatedAt
+            facing = list(directions.keys())[list(directions.values()).index(game_object.agents[i].facing)]
+            print(f'agent {game_object.agents[i].id} located at {loc}, facing {facing} with chromosomes {game_object.agents[i].chromList}')
+        print(game_object.cave.grid)
 
 
     def reproduce(self, population, generation):
