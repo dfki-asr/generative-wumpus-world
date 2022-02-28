@@ -7,13 +7,16 @@ from itertools import chain
 
 
 class game():
-    def __init__(self, n_wumpus, n_golds, n_pits, n_agents, n_initChrom, dimension):
+    def __init__(self, n_wumpus, n_golds, n_pits, n_agents, n_initChrom, dimension, agents=None):
         self.dimension = dimension
         self.n_agents = n_agents
         self.n_initChrom = n_initChrom
         self.cave = gridSetup(dimension, n_pits, n_golds, n_wumpus)
         self.agents = []
-        self.agents = self.initialize_agents()
+        if not agents:
+            self.agents = self.initialize_agents()
+        else:
+            self.agents.append(agentobject(self.cave, chromosome=agents[0].chromList, phenomena=agents[0].knownPhenomena, count=999))
         self.cave.updateAgentCoordinates(self.agents, True)
         # self.print_agent_init_chromList()
         self.graveyard = []
