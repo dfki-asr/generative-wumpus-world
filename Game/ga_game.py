@@ -8,11 +8,12 @@ from Agent.agentObjet import agentobject
 import matplotlib.pyplot as plt
 import seaborn as sns
 from statistics import mean
+from Eval.Eval import evaluate
 
 class ga_game:
-    def __init__(self, n_generations, n_agents, crossover_rate, mutation_rate):
+    def __init__(self, n_agents, crossover_rate, mutation_rate):
         self.gameRun = game(n_wumpus=1, n_golds=1, n_pits=3, n_agents=n_agents, n_initChrom=4, dimension=10)
-        self.n_gens = n_generations
+        # self.n_gens = n_generations
         self.crossover_rate = crossover_rate
         self.cross_count = 0
         self.mutation_rate = mutation_rate
@@ -28,7 +29,9 @@ class ga_game:
         # how many brand new chromosomes, vs take over from prev gen gives cross_count
         self.cross_count = int(len(agent_population) * self.crossover_rate)
         self.cross_count = self.cross_count if self.cross_count % 2 == 0 else self.cross_count + 1
-        for i in range(self.n_gens):
+        i=0
+        while True:
+        # for i in range(self.n_gens):
             print(f'\nSTARTING NEW GENERATION {i}')
             # set agent list of gameobject
             self.gameRun.agents = agent_population
@@ -43,11 +46,11 @@ class ga_game:
             # reproduce, select, crossover, mutate
             agent_population = self.reproduce(current_gen_sorted, i)
             fitnessList = []
-            for i in range(len(agent_population)):
-                fitnessList.append(current_gen_sorted[i].fitness)
+            for j in range(len(agent_population)):
+                fitnessList.append(current_gen_sorted[j].fitness)
             avg_fitness.append(mean(fitnessList))
             # this gets new population
-            # heatPlot = plt.figure(1)
+
             ax = sns.heatmap(self.gameRun.cave.grid.heatmap, linewidth=0.5, annot=True, fmt="d", cmap="YlGnBu")
             gx, gy = self.gameRun.cave.goldCoordinate[0]
             orig = ax.texts[gy*10+gx].get_text()
@@ -66,10 +69,14 @@ class ga_game:
                 string = orig + 'P'
                 ax.texts[py * 10 + px].set_fontsize(20)
                 ax.texts[py * 10 + px].set_text(string)
-
+            i += 1
+            print(f'Avg fitness is {avg_fitness[-1]}')
             plt.show()
             plt.close()
             self.reset_game(agent_population)
+
+            if avg_fitness[-1]>140 or i>200:
+                break
         plt.plot(best_fitness, label="best fitness")
         plt.plot(avg_fitness, label="avg fitness")
         plt.xlabel('Generation number')
@@ -77,9 +84,23 @@ class ga_game:
         plt.legend(loc="upper right")
         plt.title('Fitness progression over generations')
         plt.show()
-        final_run = game(n_wumpus=1, n_golds=1, n_pits=3, n_agents=1, n_initChrom=4, dimension=10, agents=[current_gen_sorted[0]])
-        self.printNewPopDetails(final_run)
-        final_run.run_game()
+
+        eval_run = evaluate(evolvedAgents=current_gen_sorted)
+
+
+        # final_run = game(n_wumpus=1, n_golds=1, n_pits=3, n_agents=1, n_initChrom=4, dimension=10, agents=current_gen_sorted)
+        # self.printNewPopDetails(final_run)
+        # final_run.run_game()
+        # final_gen_sorted:list = final_run.graveyard
+        # j=0
+        # final_avg = 0
+        # for k in range(len(final_gen_sorted)):
+        #     if final_gen_sorted[k].fitness>200:
+        #         final_avg += final_gen_sorted[k].fitness
+        #         j+=1
+        # final_avg=final_avg/len(final_gen_sorted)
+        # print(f'{j} agents won the game out of {len(final_gen_sorted)} with avg fitness of {final_avg}')
+
 
 
     def printNewPopDetails(self, game_object):
