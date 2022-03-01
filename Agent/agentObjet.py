@@ -38,6 +38,20 @@ class agentobject:
         self.grid.grid.heatmap[y][x] += 1
         self.facing = choice(list(directions.values()))
 
+    def initParameters(self, count):
+        self.size_limit = 10
+        self.fatigue = 80
+        self.fitness = 0
+        self.wonGame = False
+        self.alive = True
+        self.arrow = True
+        self.gotGold = False
+        self.killedWumpus = False
+        self.action_generator = (act for act in self.chromList)
+        self.locatedAt = [(3,3)]
+        x, y = self.locatedAt[0]
+        self.grid.grid.heatmap[y][x] += 1
+
     def initChromosome(self):  # initialises the agent with random chromosomes of random length (between 3 and self.size_limit)
         chrom_list = []
         chrom_list.append(('g','F'))
