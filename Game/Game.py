@@ -16,7 +16,8 @@ class game():
         if not agents:
             self.agents = self.initialize_agents()
         else:
-            self.agents.append(agentobject(self.cave, chromosome=agents[0].chromList, phenomena=agents[0].knownPhenomena, count=999))
+            for i in range(len(agents)):
+                self.agents.append(agentobject(self.cave, chromosome=agents[i].chromList, phenomena=agents[i].knownPhenomena, count='f'+str(i)))
         self.cave.updateAgentCoordinates(self.agents, True)
         # self.print_agent_init_chromList()
         self.graveyard = []
