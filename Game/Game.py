@@ -81,30 +81,6 @@ class game():
         self.bestIndividual = self.graveyard[0].chromList
         print(f'The best individual\'s chromosome is {self.bestIndividual}')
 
-
-    def removeDeadAgents(self):
-        dead_agents = []
-        for i in range(len(self.agents)):
-            if not self.agents[i].alive:
-                dead_agents.append(self.agents[i])
-            else:
-                continue
-        # print(dead_agents)
-        for i in range(len(dead_agents)):
-            self.graveyard.append(dead_agents[i])
-            self.agents.remove(dead_agents[i])
-
-    def evolvePerceptions(self):
-        flat_perceptions = list(chain.from_iterable(self.cave.grid.perceptions))
-        val_perc = [item for item in flat_perceptions if len(item)>0]
-        to_be_removed = []
-        for item in val_perc:
-            for i in range(len(item)):
-                item[i].setLevel(self.loopIter)
-                if item[i].lvl <= 0:
-                    to_be_removed.append(item[i])
-            self.removePerception(to_be_removed)
-
     def updateStatus(self, agent, grid, statusString, action):  # check if agent alive/dead and assign fitness scores
         loc = agent.locatedAt
         # print(f'location {loc} p {grid.pitCoordinates} s {grid.stenchCoord}')
@@ -113,6 +89,8 @@ class game():
                 agent.fitness += 200
                 print(f'agent {agent.id} won game, has fitness {agent.fitness}, exiting')
                 agent.alive = False
+                self.amplifyMarkers(agent)
+
             # else:
             #     print(f'agent {agent.id} could find gold')
             #     agent.fitness += 20
@@ -147,7 +125,7 @@ class game():
                         level = min(level, 1)
 
                 self.cave.grid.set_perception(self.cave.grid.perceptions, agent.id, agent.locatedAt, "m", lvl=level, t=self.loopIter,
-                                                  dec=0.5)
+                                                  dec=0.005)
         # if not agent.arrow:
         #     actions_left = [action[1] for action in agent.chromList]
         #     valid_actions = ['F', 'B', 'L', 'R']
@@ -158,12 +136,51 @@ class game():
         statusString += f'Agent {agent.id} located {agent.locatedAt}, facing {facing} fatigue {agent.fatigue}, fitness {agent.fitness}'
         print(statusString)
 
+    def removeDeadAgents(self):
+        dead_agents = []
+        for i in range(len(self.agents)):
+            if not self.agents[i].alive:
+                dead_agents.append(self.agents[i])
+            else:
+                continue
+        # print(dead_agents)
+        for i in range(len(dead_agents)):
+            self.graveyard.append(dead_agents[i])
+            self.agents.remove(dead_agents[i])
+
+    def evolvePerceptions(self):
+        flat_perceptions = list(chain.from_iterable(self.cave.grid.perceptions))
+        val_perc = [item for item in flat_perceptions if len(item)>0]
+        to_be_removed = []
+        for item in val_perc:
+            for i in range(len(item)):
+                item[i].setLevel(self.loopIter)
+                if item[i].lvl <= 0:
+                    to_be_removed.append(item[i])
+            self.removePerception(to_be_removed)
+
     def removePerception(self, items):
         for i,row in enumerate(self.cave.grid.perceptions):
             for j, element in enumerate(row):
                 for item in items:
                     if item in element:
                         self.cave.grid.perceptions[i][j].remove(item)
+
+    def amplifyMarkers(self, agent):
+        flat_perceptions = list(chain.from_iterable(self.cave.grid.perceptions))
+        val_perc = [item for item in flat_perceptions if len(item) > 0]
+        to_be_amplified = []
+        for item in val_perc:
+            for i in range(len(item)):
+                item[i].setLevel(self.loopIter)
+                if item[i].source == agent.id:
+                    to_be_amplified.append(item[i])
+        for i,row in enumerate(self.cave.grid.perceptions):
+            for j, element in enumerate(row):
+                for item in to_be_amplified:
+                    if item in element:
+                        item.setLevel(self.loopIter, 0.5)
+
 
 def listIntersection(lst1, lst2):
     lst3 = [value for value in lst1 if value in lst2]
