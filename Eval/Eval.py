@@ -7,7 +7,8 @@ class evaluate():
     def __init__(self, evolvedAgents):
         print("\n\n\n EVALUATION PHASE \n\n\n")
         finalRun = game(n_wumpus=1, n_golds=1, n_pits=3, n_agents=1, n_initChrom=4, dimension=10, agents=evolvedAgents)
-        evolvedAgents = finalRun.agents
+        evolvedAgents = finalRun.agents.copy()
+
         randomAgents = []
         best_fitness_evolved = []
         best_fitness_random = []
@@ -15,16 +16,19 @@ class evaluate():
         fitnessList_random = []
         avg_fitness_evolved = []
         avg_fitness_random = []
+
+        # create a batch of random agents
         for i in range(len(evolvedAgents)):
             randomAgents.append(agentobject(finalRun.cave, count='r'+str(i)))
 
-        n=10
+        n=10            # n variations of environment
         for i in range(n):
             print(f"\nEnvironment {i}")
             if not i == 0:
-                finalRun.cave = gridSetup(10, 3, 1, 1)
-            finalRun.agents = []
-
+                finalRun.cave = gridSetup(10, 3, 1, 1) # on the first run, random environment already created
+                                                        # by the call to game()
+            finalRun.agents.clear()
+            # finalRun.agents = evolvedAgents
             for k in range(len(evolvedAgents)):
                 finalRun.agents.append(evolvedAgents[k])
                 finalRun.agents[k].initParameters(count=finalRun.agents[k].id)
@@ -38,7 +42,8 @@ class evaluate():
             reset_game(finalRun)
             print(f"\n\n Evolved perf done {i}")
             #### Performance metrics
-            finalRun.agents = []
+            finalRun.agents.clear()
+            # finalRun.agents = randomAgents.copy()
             for j in range(len(randomAgents)):
                 finalRun.agents.append(randomAgents[j])
                 finalRun.agents[j].initParameters(count=finalRun.agents[j].id)
@@ -54,10 +59,10 @@ class evaluate():
         plt.plot(best_fitness_random, label="best fitness random")
         plt.plot(avg_fitness_evolved, linestyle='dashed',label="avg fitness evolved")
         plt.plot(avg_fitness_random, linestyle='dashed',label="avg fitness random")
-        plt.xlabel('Generation number')
+        plt.xlabel('Environment number')
         plt.ylabel('Highest fitness')
         plt.legend(loc="upper right")
-        plt.title('Fitness progression over generations')
+        plt.title('Fitness progression over environments')
         plt.show()
         # 1. run the entire evolved agents
         # 2. run random agents on the same grid
