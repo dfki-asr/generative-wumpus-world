@@ -9,5 +9,10 @@ class Perception() :
         self.lvl = lvl
 
 
-    def setLevel(self, now):
-        self.lvl = self.lvl - (self.dec*(now-self.t))
+    def setLevel(self, now, scale=0):
+        self.lvl = (self.lvl - (self.dec*(now-self.t))) + scale
+        self.lvl = min(1, self.lvl)
+
+    def getLevel(self, now):
+        self.setLevel(now)
+        return self.lvl
